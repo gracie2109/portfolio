@@ -1,0 +1,74 @@
+const vi = {
+  nav: {
+    about: "Giới thiệu",
+    skills: "Kỹ năng",
+    projects: "Dự án",
+    experience: "Kinh nghiệm",
+    contact: "Liên hệ",
+  },
+  hero: {
+    badge: "Sẵn sàng nhận việc",
+    greeting: "Xin chào, tôi là",
+    name: "Phuongthao Trinh",
+    subtitle: "Tôi tạo ra {accent} kết hợp thẩm mỹ và hiệu suất",
+    subtitleAccent: "trải nghiệm số",
+    btnConnect: "Kết nối ngay",
+    btnWork: "Xem dự án",
+    scrollHint: "Cuộn để khám phá",
+  },
+  marquee: "LẬP TRÌNH VIÊN SÁNG TẠO • UI/UX • FULL STACK • PIXEL PERFECT • HIỆU SUẤT CAO • ",
+  about: {
+    tag: "// GIỚI THIỆU",
+    heading: "Biến ý tưởng thành {accent}",
+    headingAccent: "hiện thực",
+    text1: "Tôi là một lập trình viên full-stack đam mê với hơn 3 năm kinh nghiệm tạo ra các sản phẩm số ấn tượng. Tôi chuyên xây dựng các ứng dụng web hiệu suất cao, dễ tiếp cận và hấp dẫn về mặt thị giác.",
+    text2: "Phương pháp của tôi kết hợp kiến trúc code sạch với thiết kế pixel-perfect. Mỗi dự án tôi chạm vào đều được xử lý cinematic — animation mượt mà, tương tác tinh tế và chú ý đến từng chi tiết.",
+    stats: [
+      { num: "50+", label: "Dự án hoàn thành" },
+      { num: "30+", label: "Khách hàng hài lòng" },
+      { num: "3+", label: "Năm kinh nghiệm" },
+      { num: "∞", label: "Cà phê đã uống" },
+    ],
+  },
+  skills: {
+    tag: "// KỸ NĂNG",
+    heading: "Công nghệ {accent}",
+    headingAccent: "của tôi",
+    tabs: {
+      all: "Tất cả",
+      frontend: "Frontend",
+      backend: "Backend",
+      database: "Database",
+      cloud_tool: "Cloud & Công cụ",
+    },
+    groups: {
+      frontend: "Frontend",
+      backend: "Backend",
+      database: "Database",
+      cloud_tool: "Cloud & Công cụ",
+    },
+  },
+  projects: {
+    tag: "// DỰ ÁN",
+    heading: "Các dự án {accent}",
+    headingAccent: "nổi bật",
+    items: [],
+  },
+  experience: {
+    tag: "// KINH NGHIỆM",
+    heading: "Hành trình {accent}",
+    headingAccent: "của tôi",
+    items: [],
+  },
+  contact: {
+    tag: "// LIÊN HỆ",
+    heading: "Hãy cùng xây dựng điều gì đó {accent}",
+    headingAccent: "tuyệt vời",
+    text: "Bạn có dự án trong đầu? Tôi rất muốn nghe về nó. Hãy kết nối và cùng tạo nên điều phi thường.",
+  },
+  footer: {
+    line1: "Thiết kế & Xây dựng với ❤️ và quá nhiều ☕",
+  },
+};
+
+export default vi;
