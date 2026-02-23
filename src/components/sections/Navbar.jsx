@@ -5,7 +5,7 @@ import LanguageSwitcher from "../ui/LanguageSwitcher";
 import { useLanguage } from "../../i18n/useLanguage";
 import logo from "../../assets/plant.lottie";
 
-const NAV_KEYS = ["about", "skills", "projects", "experience", "contact"];
+const NAV_KEYS = ["about", "skills", "projects", "experience", "contact", "resume"];
 
 const NAV_LINK_TRANSITIONS = NAV_KEYS.map((_, i) => ({
   delay: 0.7 + i * 0.1,

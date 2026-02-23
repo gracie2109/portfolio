@@ -12,17 +12,7 @@ export default function Hero() {
   const heroScale = useTransform(scrollYProgress, [0, 0.12], [1, 0.92]);
   const heroY = useTransform(scrollYProgress, [0, 0.12], [0, -80]);
 
-  const handleConfetti = () => {
-    const duration = 3000;
-    const end = Date.now() + duration;
-    const colors = ["#9382ff", "#ff6b6b", "#4ecdc4", "#ffe66d", "#ff8a5c"];
-    (function frame() {
-      confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 }, colors });
-      confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors });
-      if (Date.now() < end) requestAnimationFrame(frame);
-    })();
-  };
-
+  
   /* Parse subtitle template: "I craft {accent} that..." */
   const renderSubtitle = () => {
     const parts = t.hero.subtitle.split("{accent}");
@@ -56,7 +46,7 @@ export default function Hero() {
           </RevealText>
           <RevealText className="hero-greeting" delay={0.3} alwaysAnimate>
             <AnimatedName text={t.hero.name} delay={0.6} />
-              <span>( Grace )</span>
+            <span>( Grace )</span>
           </RevealText>
           <RevealText className="hero-subtitle" delay={1.4} alwaysAnimate>
             {renderSubtitle()}
@@ -69,10 +59,10 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.8, duration: 0.8 }}
         >
-          <MagneticButton className="btn-primary" onClick={handleConfetti}>
+          <a href="#contact" className="btn-primary">
             <span>{t.hero.btnConnect}</span>
             <span className="btn-arrow">→</span>
-          </MagneticButton>
+          </a>
           <a className="btn-outline" href="#projects">
             <span>{t.hero.btnWork}</span>
           </a>
@@ -98,8 +88,17 @@ export default function Hero() {
         <motion.div
           key={i}
           className={`floating-shape shape-${i}`}
-          animate={{ y: [0, -30, 0], rotate: [0, 180, 360], scale: [1, 1.1, 1] }}
-          transition={{ duration: 6 + i * 2, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }}
+          animate={{
+            y: [0, -30, 0],
+            rotate: [0, 180, 360],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 6 + i * 2,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: i * 0.5,
+          }}
         />
       ))}
     </motion.section>

@@ -13,6 +13,7 @@ import Projects from "./components/sections/Projects";
 import Experience from "./components/sections/Experience";
 import Contact from "./components/sections/Contact";
 import Footer from "./components/sections/Footer";
+import Resume from "./components/sections/Resume";
 
 export default function App() {
   const containerRef = useRef(null);
@@ -35,6 +36,7 @@ export default function App() {
       <Projects />
       <Experience />
       <Contact />
+      <Resume />
       <Footer />
     </div>
   );

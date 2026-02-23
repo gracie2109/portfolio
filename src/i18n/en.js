@@ -5,6 +5,7 @@ const en = {
     projects: "Projects",
     experience: "Experience",
     contact: "Contact",
+    resume: "Resume",
   },
   hero: {
     badge: "Available for work",
@@ -16,13 +17,16 @@ const en = {
     btnWork: "View Work",
     scrollHint: "Scroll to explore",
   },
-  marquee: "CREATIVE DEVELOPER • UI/UX ENTHUSIAST • FULL STACK • PIXEL PERFECT • PERFORMANCE FIRST • ",
+  marquee:
+    "CREATIVE DEVELOPER • UI/UX ENTHUSIAST • FULL STACK • PIXEL PERFECT • PERFORMANCE FIRST • ",
   about: {
     tag: "// ABOUT",
     heading: "Turning ideas into {accent}",
     headingAccent: "reality",
-    text1: "I'm a passionate full-stack developer with 3+ years of experience creating stunning digital products. I specialize in building performant, accessible, and visually compelling web applications that leave a lasting impression.",
-    text2: "My approach combines clean code architecture with pixel-perfect design implementation. Every project I touch gets the cinematic treatment — smooth animations, thoughtful interactions, and attention to every detail.",
+    text1:
+      "I'm a passionate full-stack developer with 3+ years of experience creating stunning digital products. I specialize in building performant, accessible, and visually compelling web applications that leave a lasting impression.",
+    text2:
+      "My approach combines clean code architecture with pixel-perfect design implementation. Every project I touch gets the cinematic treatment — smooth animations, thoughtful interactions, and attention to every detail.",
     stats: [
       { num: "50+", label: "Projects Completed" },
       { num: "30+", label: "Happy Clients" },
@@ -59,9 +63,24 @@ const en = {
     heading: "My {accent}",
     headingAccent: "journey",
     items: [
-      { year: "2025", role: "Senior Frontend Developer", company: "TechCorp", desc: "Led a team of 5 engineers building next-gen web applications with cutting-edge tech." },
-      { year: "2024", role: "Full Stack Developer", company: "StartupXYZ", desc: "Built and scaled products from 0 to 100k users with robust architecture." },
-      { year: "2023", role: "Junior Developer", company: "DevStudio", desc: "Started my journey building responsive, accessible web applications." },
+      {
+        year: "2025",
+        role: "Senior Frontend Developer",
+        company: "TechCorp",
+        desc: "Led a team of 5 engineers building next-gen web applications with cutting-edge tech.",
+      },
+      {
+        year: "2024",
+        role: "Full Stack Developer",
+        company: "StartupXYZ",
+        desc: "Built and scaled products from 0 to 100k users with robust architecture.",
+      },
+      {
+        year: "2023",
+        role: "Junior Developer",
+        company: "DevStudio",
+        desc: "Started my journey building responsive, accessible web applications.",
+      },
     ],
   },
   contact: {
@@ -69,6 +88,40 @@ const en = {
     heading: "Let's build something {accent}",
     headingAccent: "amazing",
     text: "Got a project in mind? I'd love to hear about it. Let's connect and make something extraordinary together.",
+    form: {
+      title: "Send a message to Grace",
+      name: "Full Name",
+      namePlaceholder: "John Doe",
+      email: "Email Address",
+      emailPlaceholder: "example@gmail.com",
+      message: "Message",
+      messagePlaceholder: "What would you like to discuss?",
+      submit: "Send Now",
+      sending: "Sending...",
+      successTitle: "Sent Successfully! 🎉",
+      successText: "Thank you for reaching out. I'll get back to you as soon as possible.",
+      sendAnother: "Send Another Message",
+      errorText: "Something went wrong. Please try again.",
+    },
+  },
+  resume: {
+    tag: "// RESUME",
+    heading: "Find the mystery {accent}",
+    headingAccent: "candidate",
+    subtitle: "Only 1 card holds the real Resume. Scratch to reveal and test your luck!",
+    mystery: "MYSTERY",
+    found: "DISCOVERED",
+    ohNo: "OH NO",
+    previewLabel: "Preview Resume",
+    downloadBtn: "View Resume 📄",
+    replayBtn: "Play Again 🔄",
+    scratchLabel: "SCRATCH HERE",
+    missMessages: [
+      "Try again! 💪",
+      "Don't give up! Keep searching 🔍",
+      "Better luck next time! 🍀",
+      "Oh no! Try another card 😅",
+    ],
   },
   footer: {
     line1: "Designed & Built with ❤️ and way too much ☕",
