@@ -89,7 +89,7 @@ const en = {
     headingAccent: "amazing",
     text: "Got a project in mind? I'd love to hear about it. Let's connect and make something extraordinary together.",
     form: {
-      title: "Send a message to Grace",
+      title: "Send me a message",
       name: "Full Name",
       namePlaceholder: "John Doe",
       email: "Email Address",

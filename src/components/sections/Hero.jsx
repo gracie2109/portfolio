@@ -1,9 +1,9 @@
 import { motion, useScroll, useTransform } from "framer-motion";
-import confetti from "canvas-confetti";
 import RevealText from "../animation/RevealText";
 import AnimatedName from "../animation/AnimatedName";
 import MagneticButton from "../ui/MagneticButton";
 import { useLanguage } from "../../i18n/useLanguage";
+import RedoAnimText from "../animation/TypeText";
 
 export default function Hero() {
   const { t } = useLanguage();
@@ -12,7 +12,6 @@ export default function Hero() {
   const heroScale = useTransform(scrollYProgress, [0, 0.12], [1, 0.92]);
   const heroY = useTransform(scrollYProgress, [0, 0.12], [0, -80]);
 
-  
   /* Parse subtitle template: "I craft {accent} that..." */
   const renderSubtitle = () => {
     const parts = t.hero.subtitle.split("{accent}");
@@ -46,7 +45,8 @@ export default function Hero() {
           </RevealText>
           <RevealText className="hero-greeting" delay={0.3} alwaysAnimate>
             <AnimatedName text={t.hero.name} delay={0.6} />
-            <span>( Grace )</span>
+            {/* <span>( Grace )</span> */}
+            <RedoAnimText  AnimatedName texts={["aka GRACE"]} delay={0.8} />
           </RevealText>
           <RevealText className="hero-subtitle" delay={1.4} alwaysAnimate>
             {renderSubtitle()}
@@ -68,7 +68,7 @@ export default function Hero() {
           </a>
         </motion.div>
 
-        <motion.div
+        {/* <motion.div
           className="hero-scroll-indicator"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -80,27 +80,8 @@ export default function Hero() {
             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
           />
           <span>{t.hero.scrollHint}</span>
-        </motion.div>
+        </motion.div> */}
       </div>
-
-      {/* Floating shapes */}
-      {[...Array(6)].map((_, i) => (
-        <motion.div
-          key={i}
-          className={`floating-shape shape-${i}`}
-          animate={{
-            y: [0, -30, 0],
-            rotate: [0, 180, 360],
-            scale: [1, 1.1, 1],
-          }}
-          transition={{
-            duration: 6 + i * 2,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: i * 0.5,
-          }}
-        />
-      ))}
     </motion.section>
   );
 }

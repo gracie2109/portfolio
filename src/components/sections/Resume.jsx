@@ -9,6 +9,7 @@ import confetti from "canvas-confetti";
 import FadeSection from "../animation/FadeSection";
 import RevealText from "../animation/RevealText";
 import ScratchCard from "../ui/ScratchCard";
+import ResumePreviewModal from "../ui/ResumeModal";
 import { useLanguage } from "../../i18n/useLanguage";
 
 /* ── helpers ── */
@@ -36,7 +37,7 @@ function useCardSize() {
   useEffect(() => {
     const calc = () => {
       const vw = window.innerWidth;
-      if (vw <= 480) setSize({ w: Math.min(vw - 48, 280), h: 320 });
+      if (vw <= 480) setSize({ w: Math.min(vw - 48, vw / 2.5), h: 220 });
       else if (vw <= 768) setSize({ w: 240, h: 320 });
       else setSize({ w: 260, h: 340 });
     };
@@ -53,8 +54,20 @@ function fireConfetti() {
   const end = Date.now() + duration;
   const colors = ["#9382ff", "#ff6b6b", "#4ecdc4", "#ffe66d", "#ff8a5c"];
   (function frame() {
-    confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 }, colors });
-    confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors });
+    confetti({
+      particleCount: 3,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0 },
+      colors,
+    });
+    confetti({
+      particleCount: 3,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1 },
+      colors,
+    });
     if (Date.now() < end) requestAnimationFrame(frame);
   })();
 }
@@ -62,7 +75,14 @@ function fireConfetti() {
 /* ────────────────────── ICONS ────────────────────── */
 const QuestionIcon = () => (
   <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-    <circle cx="24" cy="24" r="22" stroke="currentColor" strokeWidth="2.5" opacity=".35" />
+    <circle
+      cx="24"
+      cy="24"
+      r="22"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      opacity=".35"
+    />
     <text
       x="24"
       y="30"
@@ -95,7 +115,14 @@ const StarIcon = () => (
 
 const SadIcon = () => (
   <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-    <circle cx="24" cy="24" r="22" stroke="#8a879a" strokeWidth="2.5" opacity=".5" />
+    <circle
+      cx="24"
+      cy="24"
+      r="22"
+      stroke="#8a879a"
+      strokeWidth="2.5"
+      opacity=".5"
+    />
     <text
       x="24"
       y="31"
@@ -109,7 +136,6 @@ const SadIcon = () => (
   </svg>
 );
 
-
 /* ──────────────────── STATES ──────────────────── */
 const CARD_STATES = {
   HIDDEN: "hidden",
@@ -122,18 +148,15 @@ export default function Resume() {
   const { t } = useLanguage();
   const cardSize = useCardSize();
   const cardRefs = useRef([]);
-
-  const resumeLink =
-    "https://www.google.com/?hl=vi";
-
   const missMessages = useMemo(
-    () => t.resume?.missMessages ?? [
-      "Thử lại nhé! 💪",
-      "Đừng bỏ cuộc! Hãy tìm tiếp 🔍",
-      "Chúc bạn may mắn lần sau! 🍀",
-      "Ôi không! Thử card khác nhé 😅",
-    ],
-    [t]
+    () =>
+      t.resume?.missMessages ?? [
+        "Thử lại nhé! 💪",
+        "Đừng bỏ cuộc! Hãy tìm tiếp 🔍",
+        "Chúc bạn may mắn lần sau! 🍀",
+        "Ôi không! Thử card khác nhé 😅",
+      ],
+    [t],
   );
 
   // Build card data — initialised eagerly (no useEffect)
@@ -146,7 +169,7 @@ export default function Resume() {
     CARD_STATES.HIDDEN,
   ]);
   const [foundIndex, setFoundIndex] = useState(-1);
-
+  const [openModal, setOpenModal] = useState(false)
   // Reset game
   const initGame = useCallback(() => {
     setCards(buildCards(missMessages));
@@ -174,7 +197,8 @@ export default function Resume() {
         if (isWin) {
           // disable remaining hidden cards
           next.forEach((s, i) => {
-            if (i !== idx && s === CARD_STATES.HIDDEN) next[i] = CARD_STATES.HIDDEN;
+            if (i !== idx && s === CARD_STATES.HIDDEN)
+              next[i] = CARD_STATES.HIDDEN;
           });
         }
         return next;
@@ -186,7 +210,7 @@ export default function Resume() {
         setTimeout(() => fireConfetti(), 200);
       }
     },
-    [cards, states]
+    [cards, states],
   );
 
   const gameOver = foundIndex >= 0;
@@ -208,9 +232,7 @@ export default function Resume() {
     <section id="resume" className="section resume-section">
       <div className="section-inner resume-inner">
         <FadeSection>
-          <span className="section-tag">
-            {t.resume?.tag ?? "// RESUME"}
-          </span>
+          <span className="section-tag">{t.resume?.tag ?? "// RESUME"}</span>
         </FadeSection>
         <RevealText className="section-heading resume-heading" delay={0.1}>
           {renderHeading()}
@@ -262,11 +284,13 @@ export default function Resume() {
                         <>
                           <StarIcon />
                           <span className="resume-card__label resume-card__label--found">
-                            {t.resume?.found ?? "ĐÃ KHÁM PHÁ"}
+                            {t.resume?.found}
                           </span>
-                          <span className="resume-card__title">
+                          asdas
+                          {/* <span className="resume-card__title">
                             {t.resume?.previewLabel ?? "Preview Resume"} 📄
-                          </span>
+                          </span> */}
+
                         </>
                       )}
                       {state === CARD_STATES.MISS && (
@@ -292,20 +316,27 @@ export default function Resume() {
         {gameOver && (
           <FadeSection delay={0.2}>
             <div className="resume-actions">
-              <a
-                href={resumeLink}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
                 className="resume-btn resume-btn--primary"
+                onClick={() => setOpenModal(true)}
               >
-                {t.resume?.downloadBtn ?? "Xem Resume 📄"}
-              </a>
-              <button className="resume-btn resume-btn--ghost" onClick={initGame}>
+                {t.resume?.viewBtn ?? "Xem Resume 📄"}
+              </button>
+              <button
+                className="resume-btn resume-btn--ghost"
+                onClick={initGame}
+              >
                 {t.resume?.replayBtn ?? "Chơi lại 🔄"}
               </button>
             </div>
           </FadeSection>
         )}
+
+        {/* ── Resume Preview Modal ── */}
+        <ResumePreviewModal
+          isOpen={openModal}
+          onClose={() => setOpenModal(false)}
+        />
       </div>
     </section>
   );

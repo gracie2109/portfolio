@@ -5,7 +5,7 @@ import LanguageSwitcher from "../ui/LanguageSwitcher";
 import { useLanguage } from "../../i18n/useLanguage";
 import logo from "../../assets/plant.lottie";
 
-const NAV_KEYS = ["about", "skills", "projects", "experience", "contact", "resume"];
+const NAV_KEYS = ["about", "skills",  "experience", "contact", "resume"];
 
 const NAV_LINK_TRANSITIONS = NAV_KEYS.map((_, i) => ({
   delay: 0.7 + i * 0.1,
@@ -103,10 +103,10 @@ export default function Navbar() {
       animate={{ y: 0 }}
       transition={NAV_TRANSITION}
     >
-      <div className="nav-logo">
+      <a href="#" className="nav-logo" >
         <DotLottieReact src={logo} loop autoplay />
         <p>Grace</p>
-      </div>
+      </a>
 
       <div className="nav-links">
         {NAV_KEYS.map((key, i) => (

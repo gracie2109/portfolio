@@ -88,7 +88,7 @@ const vi = {
     headingAccent: "bí ẩn",
     subtitle: "Chỉ có 1 thẻ duy nhất chứa Resume. Hãy dùng cọ để cào và thử vận may!",
     mystery: "BÍ ẨN",
-    found: "ĐÃ KHÁM PHÁ",
+    found: "ĐÃ TÌM THẤY RESUME",
     ohNo: "ÔI KHÔNG",
     previewLabel: "Preview Resume",
     downloadBtn: "Xem Resume 📄",

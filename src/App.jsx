@@ -33,7 +33,7 @@ export default function App() {
       <MarqueeText />
       <About />
       <Skills />
-      <Projects />
+      {/* <Projects /> */}
       <Experience />
       <Contact />
       <Resume />
