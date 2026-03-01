@@ -12,6 +12,6 @@ export default defineConfig({
   ],
   assetsInclude: ['**/*.lottie'],
   preview: {
-    allowedHosts: "grace-phuongthao-grace-profofilo.tose.sh"
+    allowedHosts: ["grace-phuongthao-grace-profofilo.tose.sh"]
   }
 })
