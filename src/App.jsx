@@ -30,7 +30,7 @@ export default function App() {
 
       <Navbar />
       <Hero />
-      <MarqueeText />
+      {/* <MarqueeText /> */}
       <About />
       <Skills />
       {/* <Projects /> */}

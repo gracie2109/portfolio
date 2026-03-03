@@ -1,6 +1,8 @@
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 import DOMPurify from "dompurify";
+import styles from "./SkillOrb.module.css";
+import { capitalizeFirstLetter } from "../../../utils/string";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 20, scale: 0.95 },
@@ -21,7 +23,13 @@ const cardVariants = {
   },
 };
 
-export default function SkillOrb({ skill, index, isPlainIcon = false, style, typeLabel }) {
+export default function SkillOrb({
+  skill,
+  index,
+  isPlainIcon = false,
+  style,
+  typeLabel,
+}) {
   // Detect icon type
   const isSvgString = useMemo(() => {
     return (
@@ -40,49 +48,87 @@ export default function SkillOrb({ skill, index, isPlainIcon = false, style, typ
     );
   }, [skill.icon]);
 
-  const content = () => {
-    return (
-      <>
+  const renderIcon = (className) => (
+    <span className={className} style={{ ...(style ?? {}) }}>
+      {isSvgString ? (
         <span
-          className={isPlainIcon ? "skill-icon-small" : "skill-icon"}
-          style={{ ...(style ?? {}) }}
-        >
-          {isSvgString ? (
-            <span
-              className="skill-svg"
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(skill.icon),
-              }}
-            />
-          ) : isImageUrl ? (
-            <img src={skill.icon} alt={skill.name} />
-          ) : (
-            skill.icon
-          )}
-        </span>
-      </>
-    );
-  };
-  return !isPlainIcon ? (
+          className="skill-svg"
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(skill.icon),
+          }}
+        />
+      ) : isImageUrl ? (
+        <img src={skill.icon} alt={skill.name} />
+      ) : (
+        skill.icon
+      )}
+    </span>
+  );
+
+  /* Plain icon mode — no card wrapper */
+  if (isPlainIcon) {
+    return renderIcon("skill-icon-small");
+  }
+
+  return (
     <motion.div
-      className="skill-orb"
+      className={styles.card}
       custom={index}
       variants={cardVariants}
       initial="hidden"
       animate="visible"
       exit="exit"
       whileHover={{
-        scale: 1.08,
-        boxShadow: "0 0 24px rgba(147, 130, 255, 0.3)",
-        transition: { duration: 0.2 },
+        scale: 1.04,
+        boxShadow:
+          "0 8px 32px rgba(147, 130, 255, 0.18), 0 0 0 1px rgba(147, 130, 255, 0.12)",
+        transition: { duration: 0.3 },
       }}
     >
-      {content()}
+      {/* Default content (fades on hover) */}
+      {renderIcon(styles.icon)}
+      <span className={styles.name}>{skill.name}</span>
+      {typeLabel && <span className={styles.typeLabel}>{typeLabel}</span>}
 
-      <span className="skill-name">{skill.name}</span>
-      {typeLabel && <span className="skill-type-label">{typeLabel}</span>}
+      {/* Hover overlay — slide-up detail */}
+      <div className={styles.overlay}>
+        {/* {renderIcon(styles.overlayIcon)} */}
+        {/* {renderIcon(styles.overlayIcon)}
+        <span className={styles.overlayName}>{skill.name}</span>
+        {typeLabel && <span className={styles.overlayBadge}>{typeLabel}</span>} */}
+        {skill.description && (
+          <span className={styles.overlayDesc}>
+            {capitalizeFirstLetter(skill.description)}
+          </span>
+        )}
+        <a
+          href={skill?.link}
+          target="_blank"
+          style={{
+            position: "absolute",
+            // right: "0.25rem",
+            // top: "0.75rem",
+            bottom: 0,
+            cursor: "pointer",
+          }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="1.2em"
+            height="1.2em"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill="none"
+              stroke="#1494c1"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4M14 4h6m0 0v6m0-6L10 14"
+            />
+          </svg>
+        </a>
+      </div>
     </motion.div>
-  ) : (
-    content()
   );
 }
