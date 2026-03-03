@@ -94,7 +94,7 @@ const vi = {
     locked: "ĐÃ KHÓA",
     previewLabel: "Preview Resume",
     viewBtn: "Xem Resume 📄",
-    replayBtn: "Chơi lại 🔄",
+    replayBtn: "Chọn lại 🔄",
     missMessages: [
       "Thử lại nhé! 💪",
       "Đừng bỏ cuộc! Hãy tìm tiếp 🔍",

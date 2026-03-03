@@ -105,7 +105,7 @@ export default function Navbar() {
     >
       <a href="#" className="nav-logo" >
         <DotLottieReact src={logo} loop autoplay />
-        <p>Grace</p>
+        {/* <p>Grace</p> */}
       </a>
 
       <div className="nav-links">

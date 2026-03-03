@@ -196,7 +196,7 @@ export default function Resume() {
                 className="resume-btn resume-btn--ghost"
                 onClick={initGame}
               >
-                {t.resume?.replayBtn ?? "Chơi lại 🔄"}
+                {t.resume?.replayBtn ?? "Chọn lại 🔄"}
               </button>
             </div>
           </FadeSection>
