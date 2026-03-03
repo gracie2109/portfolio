@@ -1511,169 +1511,21 @@ html {
 /* ── Grid ── */
 .resume-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, auto);
   gap: 1.5rem;
+  justify-content: center;
   justify-items: center;
   padding: 0 1rem;
 }
 
-/* ── Card wrapper ── */
+/* ── Legacy card wrapper (kept for compatibility) ── */
 .resume-card {
   border-radius: 18px;
   overflow: hidden;
   position: relative;
-  background: linear-gradient(145deg, #0f0f18, #16161e 60%, #1a1a28);
-  border: 1px solid var(--border);
-  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.45s cubic-bezier(0.4, 0, 0.2, 1),
-              border-color 0.45s ease;
 }
 
-.resume-card:hover {
-  transform: translateY(-6px) scale(1.03);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-  border-color: rgba(147, 130, 255, 0.15);
-}
-
-.resume-card--found {
-  animation: resumeRevealBounce 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-.resume-card--glow {
-  animation: resumeGlow 1.8s ease-in-out forwards, resumeRevealBounce 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-  box-shadow: 0 0 50px rgba(147, 130, 255, 0.45), 0 0 100px rgba(147, 130, 255, 0.15);
-  border-color: rgba(147, 130, 255, 0.4);
-}
-
-.resume-card--glow:hover {
-  box-shadow: 0 0 60px rgba(147, 130, 255, 0.55), 0 0 110px rgba(147, 130, 255, 0.2);
-}
-
-.resume-card--miss {
-  animation: resumeShake 0.5s ease-in-out;
-}
-
-.resume-card--disabled {
-  opacity: 0.4;
-  pointer-events: none;
-  filter: grayscale(0.4);
-  transition: opacity 0.6s ease, filter 0.6s ease;
-}
-
-@keyframes resumeGlow {
-  0% {
-    box-shadow: 0 0 0 rgba(147, 130, 255, 0);
-  }
-  40% {
-    box-shadow: 0 0 70px rgba(147, 130, 255, 0.6), 0 0 140px rgba(147, 130, 255, 0.2);
-  }
-  100% {
-    box-shadow: 0 0 50px rgba(147, 130, 255, 0.45), 0 0 100px rgba(147, 130, 255, 0.15);
-  }
-}
-
-@keyframes resumeRevealBounce {
-  0% { transform: scale(1); }
-  40% { transform: scale(1.08); }
-  70% { transform: scale(0.97); }
-  100% { transform: scale(1); }
-}
-
-@keyframes resumeShake {
-  0%, 100% { transform: translateX(0); }
-  20% { transform: translateX(-6px); }
-  40% { transform: translateX(6px); }
-  60% { transform: translateX(-4px); }
-  80% { transform: translateX(4px); }
-}
-
-/* ── Card body (content under scratch) ── */
-.scratch-card-wrapper {
-  position: relative;
-  border-radius: inherit;
-}
-
-.scratch-card-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: inherit;
-}
-
-.resume-card__body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  width: 100%;
-  height: 100%;
-  padding: 2rem 1.2rem;
-  text-align: center;
-  color: var(--text);
-}
-
-.resume-card__label {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-.resume-card__label--mystery {
-  color: var(--text-muted);
-}
-
-.resume-card__label--found {
-  color: var(--accent);
-}
-
-.resume-card__label--miss {
-  color: var(--accent2);
-}
-
-.resume-card__title {
-  font-family: var(--font-display);
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: var(--text);
-  margin-top: 0.25rem;
-}
-
-.resume-card__message {
-  font-size: 0.95rem;
-  color: var(--text-dim);
-  line-height: 1.5;
-  max-width: 180px;
-}
-
-/* ── Scratch overlay ── */
-.scratch-overlay canvas {
-  border-radius: inherit;
-}
-
-.scratch-revealed {
-  pointer-events: none;
-}
-
-/* ── Progress bar (under card) ── */
-.scratch-progress-bar {
-  position: absolute;
-  bottom: -8px;
-  left: 10%;
-  width: 80%;
-  height: 3px;
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.scratch-progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent), #4ecdc4);
-  border-radius: 3px;
-  transition: width 0.15s ease;
-}
+/* (Old scratch-card states removed — SecretCVBox has its own styles) */
 
 /* ── Action buttons ── */
 .resume-actions {
@@ -1725,16 +1577,16 @@ html {
 /* ── Responsive ── */
 @media (max-width: 1024px) {
   .resume-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, auto);
     gap: 1.2rem;
   }
 }
 
 @media (max-width: 640px) {
   .resume-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
-    max-width: 320px;
+    max-width: 340px;
     margin: 0 auto;
   }
 
