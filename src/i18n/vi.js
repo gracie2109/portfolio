@@ -80,6 +80,14 @@ const vi = {
       successText: "Cảm ơn bạn đã liên hệ. Tôi sẽ phản hồi sớm nhất có thể.",
       sendAnother: "Gửi tin nhắn khác",
       errorText: "Có lỗi xảy ra. Vui lòng thử lại.",
+      validation: {
+        nameRequired: "Vui lòng nhập họ tên",
+        nameMin: "Họ tên phải có ít nhất 3 ký tự",
+        emailRequired: "Vui lòng nhập email",
+        emailInvalid: "Email không đúng định dạng",
+        messageRequired: "Vui lòng nhập nội dung tin nhắn",
+        messageMin: "Nội dung phải có ít nhất 3 ký tự",
+      },
     },
   },
   resume: {

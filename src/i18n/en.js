@@ -102,6 +102,14 @@ const en = {
       successText: "Thank you for reaching out. I'll get back to you as soon as possible.",
       sendAnother: "Send Another Message",
       errorText: "Something went wrong. Please try again.",
+      validation: {
+        nameRequired: "Name is required",
+        nameMin: "Name must be at least 3 characters",
+        emailRequired: "Email is required",
+        emailInvalid: "Invalid email format",
+        messageRequired: "Message is required",
+        messageMin: "Message must be at least 3 characters",
+      },
     },
   },
   resume: {
