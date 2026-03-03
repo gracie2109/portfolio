@@ -8,7 +8,7 @@ const en = {
     resume: "Resume",
   },
   hero: {
-    badge: "Available for work",
+    badge: "Online 24/24",
     greeting: "Hello, I'm",
     name: "Phuongthao Trinh",
     subtitle: "I craft {accent} that merge aesthetics with performance",

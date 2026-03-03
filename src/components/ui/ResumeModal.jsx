@@ -1,8 +1,7 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import BaseModal from "./BaseModal";
 import ResumeCard from "./ResumeCard";
-import { supabase } from "../../lib/supabaseClient";
 import { useLanguage } from "../../i18n/useLanguage";
 import styles from "./ResumePreviewModal.module.css";
 import { downloadFile } from "../../../utils/file";
@@ -102,14 +101,18 @@ const slideVariants = {
 };
 
 /**
- * Resume Preview Modal with dual language support
- * @param {{ isOpen: boolean, onClose: () => void }} props
+ * Resume Preview Modal — presentational component
+ * @param {{ isOpen: boolean, onClose: () => void, resumes: { en: object|null, vi: object|null }, loading?: boolean, error?: string|null, onRetry?: () => void }} props
  */
-export default function ResumePreviewModal({ isOpen, onClose }) {
+export default function ResumePreviewModal({
+  isOpen,
+  onClose,
+  resumes = { en: null, vi: null },
+  loading = false,
+  error = null,
+  onRetry,
+}) {
   const { t } = useLanguage();
-  const [resumes, setResumes] = useState({ en: null, vi: null });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const modalContentRef = useRef(null);
 
   // Preview state: null = card list, { link, title } = PDF viewer
@@ -120,46 +123,6 @@ export default function ResumePreviewModal({ isOpen, onClose }) {
   useEffect(() => {
     if (!isOpen) setPreview(null);
   }, [isOpen]);
-
-  // Fetch resumes from Supabase
-  const fetchResumes = useCallback(async () => {
-    if (!supabase) {
-      setError("Supabase not configured");
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      const { data, error: fetchError } = await supabase
-        .from("resume")
-        .select("*");
-
-      if (fetchError) throw fetchError;
-
-      const resumeMap = { en: null, vi: null };
-      data?.forEach((item) => {
-        if (item.name === "en" || item.name === "vi") {
-          resumeMap[item.name] = item;
-        }
-      });
-
-      setResumes(resumeMap);
-    } catch (err) {
-      console.error("Error fetching resumes:", err);
-      setError(err.message || "Failed to load resumes");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  // Fetch data when modal opens
-  useEffect(() => {
-    if (isOpen) {
-      fetchResumes();
-    }
-  }, [isOpen, fetchResumes]);
 
   // Open PDF preview inside modal
   const handleView = (link, title) => {
@@ -282,13 +245,15 @@ export default function ResumePreviewModal({ isOpen, onClose }) {
                 {error && (
                   <div className={styles.error}>
                     <span>{labels.error}</span>
-                    <button
-                      type="button"
-                      className={styles.retryBtn}
-                      onClick={fetchResumes}
-                    >
-                      Retry
-                    </button>
+                    {onRetry && (
+                      <button
+                        type="button"
+                        className={styles.retryBtn}
+                        onClick={onRetry}
+                      >
+                        Retry
+                      </button>
+                    )}
                   </div>
                 )}
 

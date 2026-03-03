@@ -1,4 +1,5 @@
 import { useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./BaseModal.module.css";
 
@@ -76,7 +77,7 @@ export default function BaseModal({
     maxWidth: typeof maxWidth === "number" ? `${maxWidth}px` : maxWidth,
   };
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <motion.div
@@ -100,6 +101,7 @@ export default function BaseModal({
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }

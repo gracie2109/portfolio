@@ -8,7 +8,7 @@ const vi = {
     resume: "Hồ sơ năng lực"
   },
   hero: {
-    badge: "Sẵn sàng nhận việc",
+    badge: "Online 24/24",
     greeting: "Xin chào, tôi là",
     name: "Phuongthao Trinh",
     subtitle: "Tôi tạo ra {accent} kết hợp thẩm mỹ và hiệu suất",
