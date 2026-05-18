@@ -6,6 +6,7 @@ const NAV_ITEMS = [
   { to: "/admin/projects", label: "📂 Projects" },
   { to: "/admin/experiences", label: "💼 Experiences" },
   { to: "/admin/contacts", label: "📧 Contacts" },
+ { to: "/admin/contact-with-me", label: "📧 Contacts Me" },
 ];
 
 export default function AdminLayout() {

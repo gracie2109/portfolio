@@ -22,13 +22,14 @@ const vi = {
     tag: "// GIỚI THIỆU",
     heading: "Biến ý tưởng thành {accent}",
     headingAccent: "hiện thực",
-    text1: "Tôi là một lập trình viên full-stack đam mê với hơn 3 năm kinh nghiệm tạo ra các sản phẩm số ấn tượng. Tôi chuyên xây dựng các ứng dụng web hiệu suất cao, dễ tiếp cận và hấp dẫn về mặt thị giác.",
-    text2: "Phương pháp của tôi kết hợp kiến trúc code sạch với thiết kế pixel-perfect. Mỗi dự án tôi chạm vào đều được xử lý cinematic — animation mượt mà, tương tác tinh tế và chú ý đến từng chi tiết.",
+    text1: "Tôi là lập trình viên frontend/fullstack với hơn 3 năm kinh nghiệm phát triển ứng dụng web thực tế, tập trung vào hiệu năng, trải nghiệm người dùng và kiến trúc dễ mở rộng..",
+    text2: "Tôi ưu tiên code rõ ràng, maintainable và những tương tác mượt mà phục vụ trải nghiệm sử dụng thực tế — không chỉ ở phần giao diện mà còn trong cách hệ thống vận hành và phát triển theo thời gian.",
+    text3: "Từ UI, animation đến state management và performance, mọi thành phần đều được xây dựng với mục tiêu tạo ra sản phẩm ổn định, hiện đại và có chiều sâu.",
+
     stats: [
-      { num: "50+", label: "Dự án hoàn thành" },
+      { num: "20+", label: "Dự án hoàn thành" },
       { num: "30+", label: "Khách hàng hài lòng" },
       { num: "3+", label: "Năm kinh nghiệm" },
-      { num: "∞", label: "Cà phê đã uống" },
     ],
   },
   skills: {
@@ -111,7 +112,7 @@ const vi = {
     ],
   },
   footer: {
-    line1: "Thiết kế & Xây dựng với ❤️ và quá nhiều ☕",
+    line1: "Powered by Gracie Phương Thảo",
   },
 };
 

@@ -1,9 +1,19 @@
 /**
  * Reusable data table for admin pages.
  *
- * @param {{ columns: {key,label,render?}[], rows: object[], onEdit, onDelete, loading }} props
+ * @param {{ columns: {key,label,render?}[], rows: object[], onEdit, onDelete, loading , actionButtons, showEdit, showDelete, hideFunction}} props
  */
-export default function AdminTable({ columns, rows, onEdit, onDelete, loading }) {
+export default function AdminTable({
+  columns,
+  rows,
+  onEdit,
+  onDelete,
+  loading,
+  showEdit = true,
+  showDelete = true,
+  actionButtons = () => {},
+  hideFunction = false,
+}) {
   if (loading) {
     return (
       <div className="admin-loading">
@@ -14,7 +24,11 @@ export default function AdminTable({ columns, rows, onEdit, onDelete, loading })
   }
 
   if (rows.length === 0) {
-    return <p className="admin-empty">No records found. Click "Add" to create one.</p>;
+    return (
+      <p className="admin-empty">
+        No records found. Click "Add" to create one.
+      </p>
+    );
   }
 
   return (
@@ -36,14 +50,29 @@ export default function AdminTable({ columns, rows, onEdit, onDelete, loading })
                   {col.render ? col.render(row[col.key], row) : row[col.key]}
                 </td>
               ))}
-              <td className="admin-td-actions">
-                <button className="admin-btn admin-btn-edit" onClick={() => onEdit(row)}>
-                  Edit
-                </button>
-                <button className="admin-btn admin-btn-delete" onClick={() => onDelete(row)}>
-                  Delete
-                </button>
-              </td>
+              {!hideFunction && (
+                <td className="admin-td-actions">
+                  {showEdit && (
+                    <button
+                      className="admin-btn admin-btn-edit"
+                      onClick={() => onEdit?.(row)}
+                    >
+                      Edit
+                    </button>
+                  )}
+
+                  {showDelete && (
+                    <button
+                      className="admin-btn admin-btn-delete"
+                      onClick={() => onDelete?.(row)}
+                    >
+                      Delete
+                    </button>
+                  )}
+
+                  {actionButtons(row)}
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

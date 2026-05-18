@@ -27,13 +27,16 @@ function TimelineCard({ exp, index, lang, isFirst }) {
       {/* Company name on the opposite side */}
       <div className="tl-opposite">
         <span className="tl-company-opposite">{exp.company}</span>
+        <span className="tl-duration"> {exp.duration}</span>
       </div>
 
       {/* Card */}
       <div className="tl-card">
         <span className="tl-period">
           {exp.period}
-          {exp.duration && <span className="tl-duration"> · {exp.duration}</span>}
+          {exp.duration && (
+            <span className="tl-duration"> · {exp.duration}</span>
+          )}
         </span>
         <h3 className="tl-role">
           {lang === "vi" ? exp.role_vi || exp.role_en : exp.role_en}
@@ -71,7 +74,7 @@ export default function Experience() {
       if (end) return `${start} — ${end}`;
       return `${start} — ${lang === "vi" ? "Hiện tại" : "Present"}`;
     },
-    [lang]
+    [lang],
   );
 
   const getDuration = useCallback(
@@ -88,7 +91,8 @@ export default function Experience() {
         endYear = +endString.slice(0, 4);
         endMonth = +endString.slice(5, 7);
       }
-      const totalMonths = (endYear - startYear) * 12 + (endMonth - startMonth) + 1;
+      const totalMonths =
+        (endYear - startYear) * 12 + (endMonth - startMonth) + 1;
       if (totalMonths <= 0) return "";
       const years = Math.floor(totalMonths / 12);
       const months = totalMonths % 12;
@@ -102,7 +106,7 @@ export default function Experience() {
         return `${months} mo`;
       }
     },
-    [lang]
+    [lang],
   );
 
   const timelineData = useMemo(() => {

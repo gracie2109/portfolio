@@ -1,6 +1,9 @@
 import { motion } from "framer-motion";
 import styles from "./ResumeCard.module.css";
 import { downloadFile } from "../../../utils/file";
+import { useMemo } from "react";
+import logo from "../../../src/assets/previewResume.lottie";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 // Icons
 const ViewIcon = () => (
@@ -62,13 +65,18 @@ export default function ResumeCard({
     }
   };
 
-
   const handleDownload = () => {
     if (!link) return;
-    downloadFile(link, `Trinh_Phuong_Thao_Webdev_${title.replace(/\s+/g, "_")}.pdf`);
+    downloadFile(
+      link,
+      `Trinh_Phuong_Thao_Webdev_${title.replace(/\s+/g, "_")}.pdf`,
+    );
   };
   const badge = lang === "vi" ? "VI" : "EN";
 
+  const lottiePreview = useMemo(() => {
+    return <DotLottieReact src={logo} loop autoplay />;
+  }, []);
   return (
     <motion.div
       className={styles.card}
@@ -82,29 +90,7 @@ export default function ResumeCard({
         >
           {badge}
         </span>
-
-        <div className={styles.skeleton}>
-          {/* Header block */}
-          <div className={styles.skeletonHeader} />
-          {/* Content lines */}
-          <div className={styles.skeletonLines}>
-            <div className={`${styles.skeletonLine} ${styles.lineFull}`} />
-            <div className={`${styles.skeletonLine} ${styles.line80}`} />
-            <div className={`${styles.skeletonLine} ${styles.line60}`} />
-          </div>
-          {/* Two-column block */}
-          <div className={styles.skeletonCols}>
-            <div className={styles.skeletonCol} />
-            <div className={styles.skeletonCol} />
-          </div>
-          {/* More lines */}
-          <div className={styles.skeletonLines}>
-            <div className={`${styles.skeletonLine} ${styles.lineFull}`} />
-            <div className={`${styles.skeletonLine} ${styles.line90}`} />
-            <div className={`${styles.skeletonLine} ${styles.line70}`} />
-            <div className={`${styles.skeletonLine} ${styles.line50}`} />
-          </div>
-        </div>
+        {lottiePreview}
       </div>
 
       {/* Info */}

@@ -25,6 +25,9 @@ export default function About() {
         <FadeSection delay={0.4}>
           <p className="about-text">{t.about.text2}</p>
         </FadeSection>
+        <FadeSection delay={0.4}>
+          <p className="about-text">{t.about.text3}</p>
+        </FadeSection>
         <FadeSection delay={0.5}>
           <div className="about-stats">
             {t.about.stats.map((stat) => (

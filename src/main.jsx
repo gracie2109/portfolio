@@ -14,6 +14,8 @@ import AdminSkills from "./pages/admin/AdminSkills";
 import AdminProjects from "./pages/admin/AdminProjects";
 import AdminExperiences from "./pages/admin/AdminExperiences";
 import AdminContacts from "./pages/admin/AdminContacts";
+import AdminContactsMe from "./pages/admin/AdminContactWithMe";
+
 import "./styles/admin.css";
 
 createRoot(document.getElementById("root")).render(
@@ -39,7 +41,7 @@ createRoot(document.getElementById("root")).render(
               <Route path="projects" element={<AdminProjects />} />
               <Route path="experiences" element={<AdminExperiences />} />
               <Route path="contacts" element={<AdminContacts />} />
-              <Route path="*" element={<Navigate to="skills" replace />} />
+              <Route path="contact-with-me" element={<AdminContactsMe />} />
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
