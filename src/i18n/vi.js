@@ -22,7 +22,7 @@ const vi = {
     tag: "// GIỚI THIỆU",
     heading: "Biến ý tưởng thành {accent}",
     headingAccent: "hiện thực",
-    text1: "Tôi là lập trình viên frontend/fullstack với hơn 3 năm kinh nghiệm phát triển ứng dụng web thực tế, tập trung vào hiệu năng, trải nghiệm người dùng và kiến trúc dễ mở rộng..",
+    text1: "Tôi là lập trình viên frontend/fullstack với hơn {exp} năm kinh nghiệm phát triển ứng dụng web thực tế, tập trung vào hiệu năng, trải nghiệm người dùng và kiến trúc dễ mở rộng..",
     text2: "Tôi ưu tiên code rõ ràng, maintainable và những tương tác mượt mà phục vụ trải nghiệm sử dụng thực tế — không chỉ ở phần giao diện mà còn trong cách hệ thống vận hành và phát triển theo thời gian.",
     text3: "Từ UI, animation đến state management và performance, mọi thành phần đều được xây dựng với mục tiêu tạo ra sản phẩm ổn định, hiện đại và có chiều sâu.",
 
