@@ -7,10 +7,23 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+    let mounted = true;
+
+    async function loadSession() {
+      try {
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.getSession();
+
+        if (error) throw error;
+        if (mounted) setUser(session?.user ?? null);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    }
+
+    loadSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
@@ -18,7 +31,10 @@ export function AuthProvider({ children }) {
       }
     );
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signIn = useCallback(async (email, password) => {
