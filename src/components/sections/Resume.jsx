@@ -7,6 +7,7 @@ import SecretCVBox, { BOX_STATE } from "../ui/SecretCVBox";
 import ResumePreviewModal from "../ui/ResumeModal";
 import { useLanguage } from "../../i18n/useLanguage";
 import { supabase } from "../../lib/supabaseClient";
+import { playWinSfx, playMissSfx, playClickSfx, playSuspenseSfx } from "../../utils/sfx";
 
 /* ── helpers (outside component — stable references) ── */
 function shuffle(arr) {
@@ -136,6 +137,7 @@ export default function Resume() {
       });
 
       setPhase((prev) => (prev === "idle" ? "playing" : prev));
+      playSuspenseSfx();
 
       const card = cardsRef.current[idx];
 
@@ -155,8 +157,11 @@ export default function Resume() {
         });
 
         if (isWin) {
+          playWinSfx();
           setPhase("finished");
           setTimeout(fireConfetti, 200);
+        } else {
+          playMissSfx();
         }
       }, 1000);
     },
@@ -208,7 +213,10 @@ export default function Resume() {
               index={idx}
               state={boxStates[idx]}
               missMessage={card.message ?? ""}
-              onClick={() => handlePick(idx)}
+              onClick={() => {
+                playClickSfx();
+                handlePick(idx);
+              }}
               delay={0.15 + idx * 0.1}
             />
           ))}

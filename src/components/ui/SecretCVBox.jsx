@@ -144,7 +144,7 @@ export default function SecretCVBox({
           )}
 
           {/* Win state */}
-          {(isWin || (isOpening && showContent && state === BOX_STATE.OPENING)) && (
+          {isWin && (
             <motion.div
               key="win"
               className="secret-cv-box__result secret-cv-box__result--win"
@@ -161,7 +161,7 @@ export default function SecretCVBox({
           )}
 
           {/* Miss state */}
-          {(isMiss || (isOpening && showContent && state !== BOX_STATE.OPENING)) && isMiss && (
+          {isMiss && (
             <motion.div
               key="miss"
               className="secret-cv-box__result secret-cv-box__result--miss"

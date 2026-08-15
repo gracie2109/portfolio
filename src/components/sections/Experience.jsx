@@ -26,7 +26,12 @@ function TimelineCard({ exp, index, lang, isFirst }) {
 
       {/* Company name on the opposite side */}
       <div className="tl-opposite">
-        <span className="tl-company-opposite">{exp.company}</span>
+        <div>
+          <span className="tl-company-opposite">{exp.company}</span>
+          {exp.duration && (
+            <div className="tl-company-time">{exp.duration}</div>
+          )}
+        </div>
       </div>
 
       {/* Card */}
