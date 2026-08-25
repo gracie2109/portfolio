@@ -1,8 +1,9 @@
-import { useLanguage } from "../../i18n/useLanguage";
+import { useTranslation } from "react-i18next";
 import { LANGUAGES } from "../../i18n/languages";
 
 export default function LanguageSwitcher() {
-  const { lang, setLang } = useLanguage();
+  const { i18n } = useTranslation();
+  const lang = i18n.language;
 
   return (
     <div className="lang-switcher">
@@ -10,7 +11,7 @@ export default function LanguageSwitcher() {
         <button
           key={l.code}
           className={`lang-btn ${lang === l.code ? "lang-active" : ""}`}
-          onClick={() => setLang(l.code)}
+          onClick={() => i18n.changeLanguage(l.code)}
           aria-label={`Switch to ${l.label}`}
         >
           <span className="lang-flag">{l.flag}</span>

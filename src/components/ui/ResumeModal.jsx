@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import BaseModal from "./BaseModal";
 import ResumeCard from "./ResumeCard";
-import { useLanguage } from "../../i18n/useLanguage";
+import { useTranslation } from "react-i18next";
 import styles from "./ResumePreviewModal.module.css";
 import { downloadFile } from "../../../utils/file";
 
@@ -112,7 +112,7 @@ export default function ResumePreviewModal({
   error = null,
   onRetry,
 }) {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const modalContentRef = useRef(null);
 
   // Preview state: null = card list, { link, title } = PDF viewer
@@ -159,16 +159,16 @@ export default function ResumePreviewModal({
 };
 
   const labels = {
-    title: t.resume?.modalTitle ?? "Resume Preview",
-    english: t.resume?.englishVersion ?? "English Version",
-    vietnamese: t.resume?.vietnameseVersion ?? "Vietnamese Version",
-    view: t.resume?.viewLabel ?? "Xem",
-    download: t.resume?.downloadLabel ?? "Tải xuống",
-    fullscreen: t.resume?.fullscreenBtn ?? "View Fullscreen",
-    back: t.resume?.backBtn ?? "Quay lại",
-    loading: t.resume?.loading ?? "Loading...",
-    error: t.resume?.errorMessage ?? "Failed to load resumes",
-    noData: t.resume?.noData ?? "No resume available",
+    title: t("resume.modalTitle"),
+    english: t("resume.englishVersion"),
+    vietnamese: t("resume.vietnameseVersion"),
+    view: t("resume.viewLabel"),
+    download: t("resume.downloadLabel"),
+    fullscreen: t("resume.fullscreenBtn"),
+    back: t("resume.backBtn"),
+    loading: t("resume.loading"),
+    error: t("resume.errorMessage"),
+    noData: t("resume.noData"),
   };
 
   const headerTitle = preview ? preview.title : labels.title;

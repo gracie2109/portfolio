@@ -3,13 +3,13 @@ import { AnimatePresence } from "framer-motion";
 import FadeSection from "../animation/FadeSection";
 import RevealText from "../animation/RevealText";
 import SkillOrb from "../ui/SkillOrb";
-import { useLanguage } from "../../i18n/useLanguage";
+import { useTranslation } from "react-i18next";
 import { usePublicData } from "../../hooks/usePublicData";
 
 const FILTER_KEYS = ["all", "frontend", "backend", "cloud_tool"];
 
 export default function Skills() {
-  const { t, lang } = useLanguage();
+  const { t } = useTranslation();
   const { data: skills, loading } = usePublicData("skills");
   const [activeFilter, setActiveFilter] = useState("all");
 
@@ -20,38 +20,27 @@ export default function Skills() {
   }, [skills, activeFilter]);
 
   const renderHeading = () => {
-    const parts = t.skills.heading.split("{accent}");
+    const parts = t("skills.heading").split("{accent}");
     return (
       <>
         {parts[0]}
-        <span className="accent">{t.skills.headingAccent}</span>
+        <span className="accent">{t("skills.headingAccent")}</span>
         {parts[1]}
       </>
     );
   };
 
   /* ── Tab labels (i18n) ── */
-  const tabLabels = t.skills.tabs || {
-    all: lang === "vi" ? "Tất cả" : "All",
-    frontend: "Frontend",
-    backend: "Backend",
-    // database: "Database",
-    cloud_tool: "Cloud & Tools",
-  };
+  const tabLabels = t("skills.tabs", { returnObjects: true });
 
   /* ── Type sub-label per skill ── */
-  const typeLabels = t.skills.groups || {
-    frontend: "FRONTEND",
-    backend: "BACKEND",
-    // database: "DATABASE",
-    cloud_tool: "CLOUD & TOOLS",
-  };
+  const typeLabels = t("skills.groups", { returnObjects: true });
 
   return (
     <section id="skills" className="section skills-section">
       <div className="section-inner">
         <FadeSection>
-          <span className="section-tag">{t.skills.tag}</span>
+          <span className="section-tag">{t("skills.tag")}</span>
         </FadeSection>
         <RevealText className="section-heading" delay={0.1}>
           {renderHeading()}
@@ -72,7 +61,7 @@ export default function Skills() {
 
         {loading ? (
           <p className="section-loading">
-            {lang === "vi" ? "Đang tải…" : "Loading…"}
+            {t("common.loading")}
           </p>
         ) : (
           <div className="skills-grid">

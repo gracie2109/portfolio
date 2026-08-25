@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
-import { useLanguage } from "../../i18n/useLanguage";
+import { useTranslation } from "react-i18next";
 
 export default function MarqueeText() {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
 
   return (
     <div className="marquee-container">
@@ -13,7 +13,7 @@ export default function MarqueeText() {
       >
         {[...Array(2)].map((_, i) => (
           <span key={i} className="marquee-text">
-            {t.marquee}
+            {t("marquee")}
           </span>
         ))}
       </motion.div>

@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, memo, useCallback } from "react";
 import { motion } from "framer-motion";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import LanguageSwitcher from "../ui/LanguageSwitcher";
-import { useLanguage } from "../../i18n/useLanguage";
+import { useTranslation } from "react-i18next";
 import logo from "../../assets/plant.lottie";
 
 const NAV_KEYS = ["about", "skills",  "experience", "contact", "resume"];
@@ -91,10 +91,10 @@ const NavLink = memo(({ navKey, label, isActive, index }) => (
 NavLink.displayName = "NavLink";
 
 export default function Navbar() {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const activeSection = useActiveSection();
 
-  const navLabels = useMemo(() => NAV_KEYS.map((key) => t.nav[key]), [t]);
+  const navLabels = useMemo(() => NAV_KEYS.map((key) => t(`nav.${key}`)), [t]);
 
   return (
     <motion.nav

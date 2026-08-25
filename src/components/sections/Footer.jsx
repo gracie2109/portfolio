@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
-import { useLanguage } from "../../i18n/useLanguage";
+import { useTranslation } from "react-i18next";
 
 export default function Footer() {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
 
   return (
     <footer className="footer">
@@ -13,7 +13,7 @@ export default function Footer() {
         viewport={{ once: false, amount: 0.3, margin: "-30px" }}
         transition={{ duration: 1 }}
       >
-        <p>{t.footer.line1}</p>
+        <p>{t("footer.line1")}</p>
         <p className="footer-year">© {new Date().getFullYear()}</p>
       </motion.div>
     </footer>

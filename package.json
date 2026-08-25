@@ -15,10 +15,12 @@
     "canvas-confetti": "^1.9.4",
     "dompurify": "^3.3.1",
     "framer-motion": "^12.34.3",
+    "i18next": "^26.3.6",
     "konva": "^10.2.0",
     "lottie-react": "^2.4.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-i18next": "^17.0.11",
     "react-konva": "^19.2.2",
     "react-router-dom": "^7.13.0"
   },

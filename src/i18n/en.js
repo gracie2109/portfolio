@@ -1,4 +1,7 @@
 const en = {
+  common: {
+    loading: "Loading…",
+  },
   nav: {
     about: "About",
     skills: "Skills",
@@ -27,6 +30,8 @@ const en = {
       "I'm a passionate full-stack developer with 3+ years of experience creating stunning digital products. I specialize in building performant, accessible, and visually compelling web applications that leave a lasting impression.",
     text2:
       "My approach combines clean code architecture with pixel-perfect design implementation. Every project I touch gets the cinematic treatment — smooth animations, thoughtful interactions, and attention to every detail.",
+    text3:
+      "From UI and animation to state management and performance, every part is built to deliver a product that feels stable, modern, and deeply crafted.",
     stats: [
       { num: "50+", label: "Projects Completed" },
       { num: "30+", label: "Happy Clients" },
@@ -56,32 +61,11 @@ const en = {
     tag: "// PROJECTS",
     heading: "Outstanding {accent}",
     headingAccent: "projects",
-    items: [],
   },
   experience: {
     tag: "// EXPERIENCE",
     heading: "My {accent}",
     headingAccent: "journey",
-    items: [
-      {
-        year: "2025",
-        role: "Senior Frontend Developer",
-        company: "TechCorp",
-        desc: "Led a team of 5 engineers building next-gen web applications with cutting-edge tech.",
-      },
-      {
-        year: "2024",
-        role: "Full Stack Developer",
-        company: "StartupXYZ",
-        desc: "Built and scaled products from 0 to 100k users with robust architecture.",
-      },
-      {
-        year: "2023",
-        role: "Junior Developer",
-        company: "DevStudio",
-        desc: "Started my journey building responsive, accessible web applications.",
-      },
-    ],
   },
   contact: {
     tag: "// CONTACT",
@@ -125,6 +109,16 @@ const en = {
     previewLabel: "Preview Resume",
     viewBtn: "View Resume 📄",
     replayBtn: "Play Again 🔄",
+    modalTitle: "Resume Preview",
+    englishVersion: "English Version",
+    vietnameseVersion: "Vietnamese Version",
+    viewLabel: "View",
+    downloadLabel: "Download",
+    fullscreenBtn: "View Fullscreen",
+    backBtn: "Back",
+    loading: "Loading...",
+    errorMessage: "Failed to load resumes",
+    noData: "No resume available",
     missMessages: [
       "Try again! 💪",
       "Don't give up! Keep searching 🔍",

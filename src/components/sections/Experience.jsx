@@ -1,9 +1,11 @@
-import { useMemo, useCallback, useRef } from "react";
+import { useMemo, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import FadeSection from "../animation/FadeSection";
 import RevealText from "../animation/RevealText";
-import { useLanguage } from "../../i18n/useLanguage";
+import { useTranslation } from "react-i18next";
 import { usePublicData } from "../../hooks/usePublicData";
+import { localizeField } from "../../i18n/localize";
+import { formatPeriod, getDuration } from "../../utils/experienceDuration";
 
 /* ── Single timeline card ── */
 function TimelineCard({ exp, index, lang, isFirst }) {
@@ -39,12 +41,10 @@ function TimelineCard({ exp, index, lang, isFirst }) {
           )}
         </span>
         <h3 className="tl-role">
-          {lang === "vi" ? exp.role_vi || exp.role_en : exp.role_en}
+          {localizeField(exp, "role", lang)}
         </h3>
         <p className="tl-desc">
-          {lang === "vi"
-            ? exp.description_vi || exp.description_en
-            : exp.description_en}
+          {localizeField(exp, "description", lang)}
         </p>
       </div>
     </motion.div>
@@ -52,76 +52,37 @@ function TimelineCard({ exp, index, lang, isFirst }) {
 }
 
 export default function Experience() {
-  const { t, lang } = useLanguage();
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
   const { data: experiences = [], loading } = usePublicData("experiences", {
     orderBy: "start_time",
     ascending: false,
   });
 
   const heading = useMemo(() => {
-    const parts = t.experience.heading.split("{accent}");
+    const parts = t("experience.heading").split("{accent}");
     return (
       <>
         {parts[0]}
-        <span className="accent">{t.experience.headingAccent}</span>
+        <span className="accent">{t("experience.headingAccent")}</span>
         {parts[1]}
       </>
     );
   }, [t]);
 
-  const formatPeriod = useCallback(
-    (start, end) => {
-      if (end) return `${start} — ${end}`;
-      return `${start} — ${lang === "vi" ? "Hiện tại" : "Present"}`;
-    },
-    [lang],
-  );
-
-  const getDuration = useCallback(
-    (startString, endString) => {
-      if (!startString) return "";
-      const startYear = +startString.slice(0, 4);
-      const startMonth = +startString.slice(5, 7);
-      const now = new Date();
-      let endYear, endMonth;
-      if (!endString) {
-        endYear = now.getFullYear();
-        endMonth = now.getMonth() + 1;
-      } else {
-        endYear = +endString.slice(0, 4);
-        endMonth = +endString.slice(5, 7);
-      }
-      const totalMonths =
-        (endYear - startYear) * 12 + (endMonth - startMonth) + 1;
-      if (totalMonths <= 0) return "";
-      const years = Math.floor(totalMonths / 12);
-      const months = totalMonths % 12;
-      if (lang === "vi") {
-        if (years > 0 && months > 0) return `${years} năm ${months} tháng`;
-        if (years > 0) return `${years} năm`;
-        return `${months} tháng`;
-      } else {
-        if (years > 0 && months > 0) return `${years} yr ${months} mo`;
-        if (years > 0) return `${years} yr`;
-        return `${months} mo`;
-      }
-    },
-    [lang],
-  );
-
   const timelineData = useMemo(() => {
     return experiences.map((exp) => ({
       ...exp,
-      period: formatPeriod(exp.start_time, exp.end_time),
-      duration: getDuration(exp.start_time, exp.end_time),
+      period: formatPeriod(exp.start_time, exp.end_time, lang),
+      duration: getDuration(exp.start_time, exp.end_time, lang),
     }));
-  }, [experiences, formatPeriod, getDuration]);
+  }, [experiences, lang]);
 
   return (
     <section id="experience" className="section experience-section">
       <div className="section-inner">
         <FadeSection>
-          <span className="section-tag">{t.experience.tag}</span>
+          <span className="section-tag">{t("experience.tag")}</span>
         </FadeSection>
 
         <RevealText className="section-heading" delay={0.1}>
@@ -130,7 +91,7 @@ export default function Experience() {
 
         {loading ? (
           <p className="section-loading">
-            {lang === "vi" ? "Đang tải…" : "Loading…"}
+            {t("common.loading")}
           </p>
         ) : (
           <div className="tl">

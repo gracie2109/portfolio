@@ -1,178 +1,48 @@
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import confetti from "canvas-confetti";
 import FadeSection from "../animation/FadeSection";
 import RevealText from "../animation/RevealText";
 import MagneticButton from "../ui/MagneticButton";
-import { useLanguage } from "../../i18n/useLanguage";
+import { useTranslation } from "react-i18next";
 import { usePublicData } from "../../hooks/usePublicData";
 import SkillOrb from "../ui/SkillOrb";
-import { supabase } from "../../lib/supabaseClient";
-
-/* ── confetti burst on success ── */
-function fireSuccessConfetti() {
-  const duration = 2000;
-  const end = Date.now() + duration;
-  const colors = ["#9382ff", "#4ecdc4", "#ffe66d", "#ff8a5c", "#ff6b6b"];
-
-  (function frame() {
-    confetti({
-      particleCount: 3,
-      angle: 60,
-      spread: 55,
-      origin: { x: 0 },
-      colors,
-    });
-    confetti({
-      particleCount: 3,
-      angle: 120,
-      spread: 55,
-      origin: { x: 1 },
-      colors,
-    });
-    if (Date.now() < end) requestAnimationFrame(frame);
-  })();
-}
+import { useContactForm } from "../../hooks/useContactForm";
 
 export default function Contact() {
-  const { t, lang } = useLanguage();
+  const { t } = useTranslation();
   const { data: contactLinks, loading } = usePublicData("contacts");
   const formRef = useRef(null);
 
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
+  const {
+    formData,
+    fieldErrors,
+    sending,
+    sent,
+    error,
+    isValid,
+    handleChange,
+    handleSubmit,
+    handleReset,
+  } = useContactForm(t);
 
-  const [fieldErrors, setFieldErrors] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-
-  const [sending, setSending] = useState(false);
-  const [sent, setSent] = useState(false);
-  const [error, setError] = useState(false);
-
-  const f = t.contact?.form ?? {};
-
-  /* ───────── VALIDATION ───────── */
-
-  const validateField = (name, value) => {
-    let errorMsg = "";
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-    const trimmed = value.trim();
-    const v = t.contact?.form?.validation ?? {};
-
-    if (name === "name") {
-      if (!trimmed) errorMsg = v.nameRequired ?? "Name is required";
-      else if (trimmed.length < 3) errorMsg = v.nameMin ?? "Name must be at least 3 characters";
-    }
-
-    if (name === "email") {
-      if (!trimmed) errorMsg = v.emailRequired ?? "Email is required";
-      else if (!emailRegex.test(trimmed)) errorMsg = v.emailInvalid ?? "Invalid email format";
-    }
-
-    if (name === "message") {
-      if (!trimmed) errorMsg = v.messageRequired ?? "Message is required";
-      else if (trimmed.length < 3) errorMsg = v.messageMin ?? "Message must be at least 3 characters";
-    }
-
-    return errorMsg;
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    let processedValue = value;
-    if (name === "email") {
-      processedValue = value.toLowerCase();
-    }
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: processedValue,
-    }));
-
-    setFieldErrors((prev) => ({
-      ...prev,
-      [name]: validateField(name, processedValue),
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const trimmedData = {
-      name: formData.name.trim(),
-      email: formData.email.trim().toLowerCase(),
-      message: formData.message.trim(),
-    };
-
-    const errors = {
-      name: validateField("name", trimmedData.name),
-      email: validateField("email", trimmedData.email),
-      message: validateField("message", trimmedData.message),
-    };
-
-    setFieldErrors(errors);
-
-    if (Object.values(errors).some(Boolean)) return;
-
-    setSending(true);
-    setError(false);
-
-    try {
-      const { error } = await supabase.functions.invoke(
-        "send-contact-email",
-        { body: trimmedData }
-      );
-
-      if (error) throw error;
-
-      setSent(true);
-      fireSuccessConfetti();
-      setFormData({ name: "", email: "", message: "" });
-      setFieldErrors({ name: "", email: "", message: "" });
-    } catch (err) {
-      console.error(err);
-      setError(true);
-    } finally {
-      setSending(false);
-    }
-  };
-
-  const handleReset = () => {
-    setSent(false);
-    setError(false);
-  };
+  const f = t("contact.form", { returnObjects: true }) ?? {};
 
   const renderHeading = () => {
-    const parts = t.contact.heading.split("{accent}");
+    const parts = t("contact.heading").split("{accent}");
     return (
       <>
         {parts[0]}
-        <span className="accent">{t.contact.headingAccent}</span>
+        <span className="accent">{t("contact.headingAccent")}</span>
         {parts[1]}
       </>
     );
   };
 
-  const isValid =
-    !fieldErrors.name &&
-    !fieldErrors.email &&
-    !fieldErrors.message &&
-    formData.name.trim() &&
-    formData.email.trim() &&
-    formData.message.trim();
-
   return (
     <section id="contact" className="section contact-section">
       <div className="section-inner contact-inner">
         <FadeSection>
-          <span className="section-tag">{t.contact.tag}</span>
+          <span className="section-tag">{t("contact.tag")}</span>
         </FadeSection>
 
         <RevealText className="section-heading contact-heading" delay={0.1}>
@@ -180,13 +50,13 @@ export default function Contact() {
         </RevealText>
 
         <FadeSection delay={0.3}>
-          <p className="contact-text">{t.contact.text}</p>
+          <p className="contact-text">{t("contact.text")}</p>
         </FadeSection>
 
         {/* Contact Links */}
         {loading ? (
           <p className="section-loading">
-            {lang === "vi" ? "Đang tải…" : "Loading…"}
+            {t("common.loading")}
           </p>
         ) : (
           <FadeSection delay={0.3}>

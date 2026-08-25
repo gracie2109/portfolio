@@ -1,4 +1,7 @@
 const vi = {
+  common: {
+    loading: "Đang tải…",
+  },
   nav: {
     about: "Giới thiệu",
     skills: "Kỹ năng",
@@ -22,7 +25,7 @@ const vi = {
     tag: "// GIỚI THIỆU",
     heading: "Biến ý tưởng thành {accent}",
     headingAccent: "hiện thực",
-    text1: "Tôi là lập trình viên frontend/fullstack với hơn {exp} năm kinh nghiệm phát triển ứng dụng web thực tế, tập trung vào hiệu năng, trải nghiệm người dùng và kiến trúc dễ mở rộng..",
+    text1: "Tôi là lập trình viên frontend/fullstack với hơn {{exp}} năm kinh nghiệm phát triển ứng dụng web thực tế, tập trung vào hiệu năng, trải nghiệm người dùng và kiến trúc dễ mở rộng..",
     text2: "Tôi ưu tiên code rõ ràng, maintainable và những tương tác mượt mà phục vụ trải nghiệm sử dụng thực tế — không chỉ ở phần giao diện mà còn trong cách hệ thống vận hành và phát triển theo thời gian.",
     text3: "Từ UI, animation đến state management và performance, mọi thành phần đều được xây dựng với mục tiêu tạo ra sản phẩm ổn định, hiện đại và có chiều sâu.",
 
@@ -30,6 +33,7 @@ const vi = {
       { num: "20+", label: "Dự án hoàn thành" },
       { num: "30+", label: "Khách hàng hài lòng" },
       { num: "3+", label: "Năm kinh nghiệm" },
+      { num: "∞", label: "Cà phê đã uống" },
     ],
   },
   skills: {
@@ -54,13 +58,11 @@ const vi = {
     tag: "// DỰ ÁN",
     heading: "Các dự án {accent}",
     headingAccent: "nổi bật",
-    items: [],
   },
   experience: {
     tag: "// KINH NGHIỆM",
     heading: "Hành trình {accent}",
     headingAccent: "của tôi",
-    items: [],
   },
   contact: {
     tag: "// LIÊN HỆ",
@@ -104,6 +106,16 @@ const vi = {
     previewLabel: "Preview Resume",
     viewBtn: "Xem Resume 📄",
     replayBtn: "Chọn lại 🔄",
+    modalTitle: "Xem trước Resume",
+    englishVersion: "Bản Tiếng Anh",
+    vietnameseVersion: "Bản Tiếng Việt",
+    viewLabel: "Xem",
+    downloadLabel: "Tải xuống",
+    fullscreenBtn: "Xem toàn màn hình",
+    backBtn: "Quay lại",
+    loading: "Đang tải...",
+    errorMessage: "Không thể tải resume",
+    noData: "Không có resume",
     missMessages: [
       "Thử lại nhé! 💪",
       "Đừng bỏ cuộc! Hãy tìm tiếp 🔍",

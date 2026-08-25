@@ -2,11 +2,11 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import RevealText from "../animation/RevealText";
 import AnimatedName from "../animation/AnimatedName";
 import MagneticButton from "../ui/MagneticButton";
-import { useLanguage } from "../../i18n/useLanguage";
+import { useTranslation } from "react-i18next";
 import RedoAnimText from "../animation/TypeText";
 
 export default function Hero() {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const { scrollYProgress } = useScroll();
   const heroOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 0.12], [1, 0.92]);
@@ -14,11 +14,11 @@ export default function Hero() {
 
   /* Parse subtitle template: "I craft {accent} that..." */
   const renderSubtitle = () => {
-    const parts = t.hero.subtitle.split("{accent}");
+    const parts = t("hero.subtitle").split("{accent}");
     return (
       <>
         {parts[0]}
-        <span className="accent">{t.hero.subtitleAccent}</span>
+        <span className="accent">{t("hero.subtitleAccent")}</span>
         {parts[1]}
       </>
     );
@@ -36,15 +36,15 @@ export default function Hero() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 1, duration: 0.6, type: "spring" }}
         >
-          <span className="badge-dot" /> {t.hero.badge}
+          <span className="badge-dot" /> {t("hero.badge")}
         </motion.div>
 
         <div className="hero-title-wrap">
           <RevealText className="hero-greeting" delay={0.3} alwaysAnimate>
-            {t.hero.greeting}
+            {t("hero.greeting")}
           </RevealText>
           <RevealText className="hero-greeting" delay={0.3} alwaysAnimate>
-            <AnimatedName text={t.hero.name} delay={0.6} />
+            <AnimatedName text={t("hero.name")} delay={0.6} />
             {/* <span>( Grace )</span> */}
             <RedoAnimText  AnimatedName texts={["aka GRACE"]} delay={0.8} />
           </RevealText>
@@ -60,11 +60,11 @@ export default function Hero() {
           transition={{ delay: 1.8, duration: 0.8 }}
         >
           <a href="#contact" className="btn-primary">
-            <span>{t.hero.btnConnect}</span>
+            <span>{t("hero.btnConnect")}</span>
             <span className="btn-arrow">→</span>
           </a>
           <a className="btn-outline" href="#projects">
-            <span>{t.hero.btnWork}</span>
+            <span>{t("hero.btnWork")}</span>
           </a>
         </motion.div>
 
@@ -79,7 +79,7 @@ export default function Hero() {
             animate={{ y: [0, 12, 0] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
           />
-          <span>{t.hero.scrollHint}</span>
+          <span>{t("hero.scrollHint")}</span>
         </motion.div> */}
       </div>
     </motion.section>
