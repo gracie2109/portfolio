@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import { createBrowserClient } from "@supabase/ssr";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -9,4 +9,9 @@ if (!supabaseUrl || !supabaseAnonKey) {
   );
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+/**
+ * Browser client from @supabase/ssr — persists the session via cookies
+ * instead of localStorage, so it's compatible with a server-rendered
+ * client later (a matching createServerClient can read the same cookie).
+ */
+export const supabase = createBrowserClient(supabaseUrl, supabaseAnonKey);
