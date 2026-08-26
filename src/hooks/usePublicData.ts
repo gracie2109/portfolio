@@ -10,7 +10,7 @@ interface Opts {
  * Lightweight read-only hook for fetching public Supabase data.
  * Used by portfolio sections (no auth required — RLS allows public SELECT).
  */
-export function usePublicData<T = any>(table: string, opts: Opts = {}) {
+export function usePublicData<T = unknown>(table: string, opts: Opts = {}) {
   const { orderBy = "sort_order", ascending = true } = opts;
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);

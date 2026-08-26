@@ -75,21 +75,29 @@ export default function SecretCVBox({
   onClick,
   delay = 0,
 }: SecretCVBoxProps) {
-  const [showContent, setShowContent] = useState(false);
+  // showContent is a pure function of `state`, except OPENING which
+  // delays the reveal by 900ms — needs a genuine effect for the timer,
+  // and resets openingRevealed on every other transition so a later
+  // re-OPENING starts from hidden again.
+  const [openingRevealed, setOpeningRevealed] = useState(false);
 
-  // When opening animation starts, delay showing content
   useEffect(() => {
-    if (state === BOX_STATE.OPENING) {
-      const timer = setTimeout(() => setShowContent(true), 900);
-      return () => clearTimeout(timer);
+    if (state !== BOX_STATE.OPENING) {
+      // Resets derived UI state on the `state` prop transition, not a data sync.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setOpeningRevealed(false);
+      return;
     }
-    if (state === BOX_STATE.WIN || state === BOX_STATE.MISS) {
-      setShowContent(true);
-    }
-    if (state === BOX_STATE.SEALED || state === BOX_STATE.DISABLED) {
-      setShowContent(false);
-    }
+    const timer = setTimeout(() => setOpeningRevealed(true), 900);
+    return () => clearTimeout(timer);
   }, [state]);
+
+  const showContent =
+    state === BOX_STATE.WIN || state === BOX_STATE.MISS
+      ? true
+      : state === BOX_STATE.OPENING
+        ? openingRevealed
+        : false;
 
   const isSealed = state === BOX_STATE.SEALED;
   const isOpening = state === BOX_STATE.OPENING;

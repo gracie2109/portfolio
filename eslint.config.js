@@ -6,7 +6,7 @@ import { FlatCompat } from '@eslint/eslintrc'
 const compat = new FlatCompat({ baseDirectory: import.meta.dirname })
 
 export default defineConfig([
-  globalIgnores(['dist', '.next', 'next-env.d.ts', 'supabase']),
+  globalIgnores(['dist', '.next', 'next-env.d.ts', 'supabase', '.gitnexus']),
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
   {
     // Base (non-TS-aware) no-unused-vars misreads TS-only constructs

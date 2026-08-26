@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState, useCallback, type ReactNode, type MouseEvent } from "react";
+import { useEffect, useCallback, type ReactNode, type MouseEvent } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
+import { useMounted } from "@/hooks/useMounted";
 import styles from "./BaseModal.module.css";
 
 const overlayVariants: Variants = {
@@ -54,8 +55,7 @@ export default function BaseModal({
 }: BaseModalProps) {
   // Portals can't render on the server (no `document`) — defer until
   // mounted client-side. Standard SSR-safe portal pattern.
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useMounted();
 
   // ESC key handler
   const handleKeyDown = useCallback(

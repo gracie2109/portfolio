@@ -135,8 +135,12 @@ export default function ResumePreviewModal({
   const [preview, setPreview] = useState<Preview | null>(null);
   const [slideDir, setSlideDir] = useState(1);
 
-  // Reset preview when modal closes
+  // Reset preview when modal closes. Genuinely needs an effect (not a
+  // render-time ref adjustment) since the React Compiler treats ref
+  // reads/writes during render as impure.
   useEffect(() => {
+    // Resets derived UI state on the isOpen prop transition, not a data sync.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (!isOpen) setPreview(null);
   }, [isOpen]);
 

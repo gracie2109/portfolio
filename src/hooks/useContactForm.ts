@@ -1,8 +1,16 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import confetti from "canvas-confetti";
+import type { TFunction } from "i18next";
 import { contactService } from "../services/contactService";
 
-type TFunction = (key: string, options?: Record<string, unknown>) => any;
+interface ValidationMessages {
+  nameRequired?: string;
+  nameMin?: string;
+  emailRequired?: string;
+  emailInvalid?: string;
+  messageRequired?: string;
+  messageMin?: string;
+}
 
 /* client-only: requestAnimationFrame */
 function fireSuccessConfetti() {
@@ -60,7 +68,8 @@ export function useContactForm(t: TFunction) {
     let errorMsg = "";
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
     const trimmed = value.trim();
-    const v = t("contact.form.validation", { returnObjects: true }) ?? {};
+    const v = (t("contact.form.validation", { returnObjects: true }) ??
+      {}) as ValidationMessages;
 
     if (name === "name") {
       if (!trimmed) errorMsg = v.nameRequired ?? "Name is required";

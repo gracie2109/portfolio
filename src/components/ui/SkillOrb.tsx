@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useEffect, useState, type CSSProperties } from "react";
+import { useMemo, type CSSProperties } from "react";
 import { motion, type Variants } from "framer-motion";
 import DOMPurify from "dompurify";
+import { useMounted } from "@/hooks/useMounted";
 import styles from "./SkillOrb.module.css";
 import { capitalizeFirstLetter } from "../../../utils/string";
 
@@ -51,8 +52,7 @@ export default function SkillOrb({
   // DOMPurify needs a DOM to construct its sanitizer — unavailable
   // during SSR. Defer the sanitized-SVG branch until mounted
   // client-side to avoid a server crash / hydration mismatch.
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useMounted();
 
   // Detect icon type
   const isSvgString = useMemo(() => {
