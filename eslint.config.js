@@ -6,10 +6,14 @@ import { FlatCompat } from '@eslint/eslintrc'
 const compat = new FlatCompat({ baseDirectory: import.meta.dirname })
 
 export default defineConfig([
-  globalIgnores(['dist', '.next']),
+  globalIgnores(['dist', '.next', 'next-env.d.ts', 'supabase']),
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
   {
-    files: ['**/*.{js,jsx,ts,tsx}'],
+    // Base (non-TS-aware) no-unused-vars misreads TS-only constructs
+    // (interface method params, type aliases) as unused bindings —
+    // scope it to plain JS/JSX only; next/typescript's own
+    // @typescript-eslint/no-unused-vars already covers .ts/.tsx.
+    files: ['**/*.{js,jsx}'],
     extends: [js.configs.recommended],
     languageOptions: {
       ecmaVersion: 2020,
