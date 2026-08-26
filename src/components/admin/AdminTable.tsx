@@ -1,9 +1,31 @@
+import type { ReactNode } from "react";
+
+interface AdminColumn<T> {
+  key: string;
+  label: string;
+  render?: (value: unknown, row: T) => ReactNode;
+}
+
+interface WithId {
+  id: string;
+}
+
+interface AdminTableProps<T extends WithId> {
+  columns: AdminColumn<T>[];
+  rows: T[];
+  onEdit?: (row: T) => void;
+  onDelete?: (row: T) => void;
+  loading?: boolean;
+  showEdit?: boolean;
+  showDelete?: boolean;
+  actionButtons?: (row: T) => ReactNode;
+  hideFunction?: boolean;
+}
+
 /**
  * Reusable data table for admin pages.
- *
- * @param {{ columns: {key,label,render?}[], rows: object[], onEdit, onDelete, loading , actionButtons, showEdit, showDelete, hideFunction}} props
  */
-export default function AdminTable({
+export default function AdminTable<T extends WithId>({
   columns,
   rows,
   onEdit,
@@ -11,9 +33,9 @@ export default function AdminTable({
   loading,
   showEdit = true,
   showDelete = true,
-  actionButtons = () => {},
+  actionButtons = () => null,
   hideFunction = false,
-}) {
+}: AdminTableProps<T>) {
   if (loading) {
     return (
       <div className="admin-loading">
@@ -26,7 +48,7 @@ export default function AdminTable({
   if (rows.length === 0) {
     return (
       <p className="admin-empty">
-        No records found. Click "Add" to create one.
+        No records found. Click &quot;Add&quot; to create one.
       </p>
     );
   }
@@ -47,7 +69,9 @@ export default function AdminTable({
             <tr key={row.id}>
               {columns.map((col) => (
                 <td key={col.key}>
-                  {col.render ? col.render(row[col.key], row) : row[col.key]}
+                  {col.render
+                    ? col.render((row as unknown as Record<string, unknown>)[col.key], row)
+                    : (row as unknown as Record<string, unknown>)[col.key] as ReactNode}
                 </td>
               ))}
               {!hideFunction && (

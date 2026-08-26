@@ -1,12 +1,19 @@
-/**
- * Confirm-delete dialog using native <dialog>.
- *
- * @param {{ open, itemLabel, onConfirm, onCancel }} props
- */
+"use client";
+
 import { useEffect, useRef } from "react";
 
-export default function ConfirmDialog({ open, itemLabel, onConfirm, onCancel }) {
-  const ref = useRef(null);
+interface ConfirmDialogProps {
+  open: boolean;
+  itemLabel: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+
+/**
+ * Confirm-delete dialog using native <dialog>.
+ */
+export default function ConfirmDialog({ open, itemLabel, onConfirm, onCancel }: ConfirmDialogProps) {
+  const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     const d = ref.current;

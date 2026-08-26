@@ -1,14 +1,31 @@
-import { useState } from "react";
-import { useCrud } from "../../hooks/useCrud";
-import { projectsService } from "../../services/projectsService";
-import AdminTable from "../../components/admin/AdminTable";
-import AdminModal from "../../components/admin/AdminModal";
-import FormField from "../../components/admin/FormField";
-import ConfirmDialog from "../../components/admin/ConfirmDialog";
-import ErrorBanner from "../../components/admin/ErrorBanner";
-import SkillOrb from "../../components/ui/SkillOrb";
+"use client";
 
-const EMPTY = {
+import { useState } from "react";
+import { useCrud } from "@/hooks/useCrud";
+import { projectsService } from "@/services/projectsService";
+import AdminTable from "@/components/admin/AdminTable";
+import AdminModal from "@/components/admin/AdminModal";
+import FormField from "@/components/admin/FormField";
+import ConfirmDialog from "@/components/admin/ConfirmDialog";
+import ErrorBanner from "@/components/admin/ErrorBanner";
+import SkillOrb from "@/components/ui/SkillOrb";
+
+interface Project {
+  id: string;
+  emoji: string;
+  tags: string[];
+  image_url: string;
+  link_url: string;
+  title_en: string;
+  title_vi: string;
+  description_en: string;
+  description_vi: string;
+  sort_order: number;
+}
+
+type ProjectForm = Omit<Project, "id" | "tags"> & { tags: string };
+
+const EMPTY: ProjectForm = {
   emoji: "🚀",
   tags: "",
   image_url: "",
@@ -24,20 +41,14 @@ const COLUMNS = [
   {
     key: "emoji",
     label: "Emoji",
-    render: (value) => (
-      <SkillOrb
-        skill={{
-          icon: value,
-        }}
-        index={value}
-        isPlainIcon
-      />
+    render: (value: unknown) => (
+      <SkillOrb skill={{ icon: value as string }} isPlainIcon />
     ),
   },
   {
     key: "title_en",
     label: "Title (EN / VI)",
-    render: (_v, row) => (
+    render: (_v: unknown, row: Project) => (
       <div>
         <div>{row.title_en}</div>
         <div className="admin-sub">{row.title_vi}</div>
@@ -47,8 +58,8 @@ const COLUMNS = [
   {
     key: "tags",
     label: "Tags",
-    render: (tags) =>
-      (tags || []).map((t) => (
+    render: (tags: unknown) =>
+      ((tags as string[]) || []).map((t) => (
         <span key={t} className="admin-tag">
           {t}
         </span>
@@ -57,27 +68,24 @@ const COLUMNS = [
   { key: "sort_order", label: "Order" },
 ];
 
-/**
- * Converts a comma-separated string to an array and vice-versa for the tags field.
- */
-function tagsToString(arr) {
+function tagsToString(arr: string[] | string | undefined): string {
   return Array.isArray(arr) ? arr.join(", ") : arr || "";
 }
-function stringToTags(str) {
+function stringToTags(str: string): string[] {
   return str
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
 }
 
-export default function AdminProjects() {
+export default function AdminProjectsPage() {
   const { items, loading, error, addItem, updateItem, removeItem } =
-    useCrud(projectsService);
+    useCrud<Project>(projectsService);
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [editing, setEditing] = useState(null);
-  const [form, setForm] = useState(EMPTY);
-  const [confirmTarget, setConfirmTarget] = useState(null);
+  const [editing, setEditing] = useState<Project | null>(null);
+  const [form, setForm] = useState<ProjectForm>(EMPTY);
+  const [confirmTarget, setConfirmTarget] = useState<Project | null>(null);
   const [saving, setSaving] = useState(false);
 
   const openAdd = () => {
@@ -86,13 +94,13 @@ export default function AdminProjects() {
     setModalOpen(true);
   };
 
-  const openEdit = (row) => {
+  const openEdit = (row: Project) => {
     setEditing(row);
     setForm({
+      ...row,
       tags: tagsToString(row.tags),
       image_url: row.image_url || "",
       link_url: row.link_url || "",
-      ...row,
     });
     setModalOpen(true);
   };
@@ -120,7 +128,8 @@ export default function AdminProjects() {
     setConfirmTarget(null);
   };
 
-  const set = (key) => (val) => setForm((f) => ({ ...f, [key]: val }));
+  const set = (key: keyof ProjectForm) => (val: string) =>
+    setForm((f) => ({ ...f, [key]: val }));
 
   return (
     <div className="admin-page">
@@ -157,7 +166,7 @@ export default function AdminProjects() {
           <FormField
             label="Sort Order"
             value={form.sort_order}
-            onChange={(v) => set("sort_order")(Number(v))}
+            onChange={(v) => setForm((f) => ({ ...f, sort_order: Number(v) }))}
             type="number"
           />
         </div>

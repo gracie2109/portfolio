@@ -1,13 +1,29 @@
-import { useState } from "react";
-import { useCrud } from "../../hooks/useCrud";
-import { experiencesService } from "../../services/experiencesService";
-import AdminTable from "../../components/admin/AdminTable";
-import AdminModal from "../../components/admin/AdminModal";
-import FormField from "../../components/admin/FormField";
-import ConfirmDialog from "../../components/admin/ConfirmDialog";
-import ErrorBanner from "../../components/admin/ErrorBanner";
+"use client";
 
-const EMPTY = {
+import { useState } from "react";
+import { useCrud } from "@/hooks/useCrud";
+import { experiencesService } from "@/services/experiencesService";
+import AdminTable from "@/components/admin/AdminTable";
+import AdminModal from "@/components/admin/AdminModal";
+import FormField from "@/components/admin/FormField";
+import ConfirmDialog from "@/components/admin/ConfirmDialog";
+import ErrorBanner from "@/components/admin/ErrorBanner";
+
+interface Experience {
+  id: string;
+  start_time: string;
+  end_time: string | null;
+  company: string;
+  role_en: string;
+  role_vi: string;
+  description_en: string;
+  description_vi: string;
+  sort_order: number;
+}
+
+type ExperienceForm = Omit<Experience, "id" | "end_time"> & { end_time: string };
+
+const EMPTY: ExperienceForm = {
   start_time: "",
   end_time: "",
   company: "",
@@ -22,7 +38,7 @@ const COLUMNS = [
   {
     key: "start_time",
     label: "Period",
-    render: (_v, row) => (
+    render: (_v: unknown, row: Experience) => (
       <span>
         {row.start_time} — {row.end_time || "Present"}
       </span>
@@ -32,7 +48,7 @@ const COLUMNS = [
   {
     key: "role_en",
     label: "Role (EN / VI)",
-    render: (_v, row) => (
+    render: (_v: unknown, row: Experience) => (
       <div>
         <div>{row.role_en}</div>
         <div className="admin-sub">{row.role_vi}</div>
@@ -42,19 +58,19 @@ const COLUMNS = [
   {
     key: "description_en",
     label: "Description",
-    render: (v) => <span className="admin-truncate">{v}</span>,
+    render: (v: unknown) => <span className="admin-truncate">{v as string}</span>,
   },
   { key: "sort_order", label: "Order" },
 ];
 
-export default function AdminExperiences() {
+export default function AdminExperiencesPage() {
   const { items, loading, error, addItem, updateItem, removeItem } =
-    useCrud(experiencesService);
+    useCrud<Experience>(experiencesService);
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [editing, setEditing] = useState(null);
-  const [form, setForm] = useState(EMPTY);
-  const [confirmTarget, setConfirmTarget] = useState(null);
+  const [editing, setEditing] = useState<Experience | null>(null);
+  const [form, setForm] = useState<ExperienceForm>(EMPTY);
+  const [confirmTarget, setConfirmTarget] = useState<Experience | null>(null);
   const [saving, setSaving] = useState(false);
 
   const openAdd = () => {
@@ -63,7 +79,7 @@ export default function AdminExperiences() {
     setModalOpen(true);
   };
 
-  const openEdit = (row) => {
+  const openEdit = (row: Experience) => {
     setEditing(row);
     setForm({
       ...row,
@@ -95,7 +111,8 @@ export default function AdminExperiences() {
     setConfirmTarget(null);
   };
 
-  const set = (key) => (val) => setForm((f) => ({ ...f, [key]: val }));
+  const set = (key: keyof ExperienceForm) => (val: string) =>
+    setForm((f) => ({ ...f, [key]: val }));
 
   return (
     <div className="admin-page">
@@ -145,7 +162,7 @@ export default function AdminExperiences() {
           <FormField
             label="Sort Order"
             value={form.sort_order}
-            onChange={(v) => set("sort_order")(Number(v))}
+            onChange={(v) => setForm((f) => ({ ...f, sort_order: Number(v) }))}
             type="number"
           />
         </div>

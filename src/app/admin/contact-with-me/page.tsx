@@ -1,10 +1,18 @@
-import { useEffect, useRef, useState } from "react";
-import AdminTable from "../../../components/admin/AdminTable";
-import ErrorBanner from "../../../components/admin/ErrorBanner";
-import {
-  contactWithMeService,
-  replyEmailService,
-} from "../../../services/contactMeService";
+"use client";
+
+import { useEffect, useRef, useState, type FormEvent } from "react";
+import AdminTable from "@/components/admin/AdminTable";
+import ErrorBanner from "@/components/admin/ErrorBanner";
+import { contactWithMeService, replyEmailService } from "@/services/contactMeService";
+
+interface ContactWithMe {
+  id: string;
+  name: string;
+  email: string;
+  message: string;
+  replied_at: string | null;
+  created_at: string;
+}
 
 const COLUMNS = [
   { key: "name", label: "Name" },
@@ -12,19 +20,22 @@ const COLUMNS = [
   {
     key: "message",
     label: "Message",
-    render: (v) => (
-      <span title={v} style={{ maxWidth: 260, display: "inline-block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-        {v}
+    render: (v: unknown) => (
+      <span
+        title={v as string}
+        style={{ maxWidth: 260, display: "inline-block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+      >
+        {v as string}
       </span>
     ),
   },
   {
     key: "replied_at",
     label: "Status",
-    render: (v) =>
+    render: (v: unknown) =>
       v ? (
         <span style={{ color: "#4ade80" }}>
-          ✅ Replied {new Date(v).toLocaleDateString()}
+          ✅ Replied {new Date(v as string).toLocaleDateString()}
         </span>
       ) : (
         <span style={{ color: "#facc15" }}>⏳ Pending</span>
@@ -33,16 +44,22 @@ const COLUMNS = [
   {
     key: "created_at",
     label: "Created At",
-    render: (v) => new Date(v).toLocaleString(),
+    render: (v: unknown) => new Date(v as string).toLocaleString(),
   },
 ];
 
 /* ── Reply Modal ──────────────────────────────────────────── */
-function ReplyModal({ contact, onClose, onSent }) {
-  const dialogRef = useRef(null);
+interface ReplyModalProps {
+  contact: ContactWithMe | null;
+  onClose: () => void;
+  onSent: () => void;
+}
+
+function ReplyModal({ contact, onClose, onSent }: ReplyModalProps) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const [subject, setSubject] = useState(`Re: Message from ${contact?.name ?? ""}`);
   const [message, setMessage] = useState("");
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState<File[]>([]);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
 
@@ -53,9 +70,8 @@ function ReplyModal({ contact, onClose, onSent }) {
     if (!contact && d.open) d.close();
   }, [contact]);
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = Array.from(e.target.files ?? []);
-    // Limit total size to 10 MB
     const totalSize = selected.reduce((s, f) => s + f.size, 0);
     if (totalSize > 10 * 1024 * 1024) {
       setError("Total attachment size must be under 10 MB");
@@ -64,13 +80,13 @@ function ReplyModal({ contact, onClose, onSent }) {
     setFiles(selected);
   };
 
-  const removeFile = (index) => {
+  const removeFile = (index: number) => {
     setFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleSend = async (e) => {
+  const handleSend = async (e: FormEvent) => {
     e.preventDefault();
-    if (!message.trim()) return;
+    if (!message.trim() || !contact) return;
 
     setSending(true);
     setError("");
@@ -84,7 +100,7 @@ function ReplyModal({ contact, onClose, onSent }) {
       });
       onSent();
     } catch (err) {
-      setError(err.message || "Failed to send email");
+      setError(err instanceof Error ? err.message : "Failed to send email");
     } finally {
       setSending(false);
     }
@@ -107,7 +123,6 @@ function ReplyModal({ contact, onClose, onSent }) {
         </div>
 
         <div className="admin-modal-body">
-          {/* Original message */}
           <div style={{ background: "#1a1a2e", padding: "0.75rem 1rem", borderRadius: 8, marginBottom: "1rem", fontSize: "0.85rem", color: "#a0a0b8" }}>
             <strong>From:</strong> {contact.name} &lt;{contact.email}&gt;
             <br />
@@ -117,7 +132,6 @@ function ReplyModal({ contact, onClose, onSent }) {
 
           {error && <ErrorBanner message={error} onDismiss={() => setError("")} />}
 
-          {/* Subject */}
           <div className="admin-field">
             <label htmlFor="reply-subject" className="admin-label">Subject</label>
             <input
@@ -129,7 +143,6 @@ function ReplyModal({ contact, onClose, onSent }) {
             />
           </div>
 
-          {/* Message body */}
           <div className="admin-field">
             <label htmlFor="reply-message" className="admin-label">
               Message <span className="admin-required">*</span>
@@ -145,7 +158,6 @@ function ReplyModal({ contact, onClose, onSent }) {
             />
           </div>
 
-          {/* Attachments */}
           <div className="admin-field">
             <label htmlFor="reply-attachments" className="admin-label">Attachments</label>
             <input
@@ -216,12 +228,12 @@ function ReplyModal({ contact, onClose, onSent }) {
 }
 
 /* ── Page ─────────────────────────────────────────────────── */
-export default function AdminContactWithMe() {
-  const [items, setItems] = useState([]);
+export default function AdminContactWithMePage() {
+  const [items, setItems] = useState<ContactWithMe[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [dataSearch, setDataSearch] = useState("");
-  const [replyTarget, setReplyTarget] = useState(null);
+  const [replyTarget, setReplyTarget] = useState<ContactWithMe | null>(null);
 
   const loadData = async (searchText = "") => {
     try {
@@ -229,7 +241,7 @@ export default function AdminContactWithMe() {
       const data = await contactWithMeService.getAll({ searchText });
       setItems(data);
     } catch (err) {
-      setError(err.message);
+      setError(err instanceof Error ? err.message : "Failed to fetch");
     } finally {
       setLoading(false);
     }
@@ -243,7 +255,7 @@ export default function AdminContactWithMe() {
 
   const handleReplySent = () => {
     setReplyTarget(null);
-    loadData(dataSearch); // reload to show updated replied_at
+    loadData(dataSearch);
   };
 
   return (

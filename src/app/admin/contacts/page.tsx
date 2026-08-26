@@ -1,14 +1,25 @@
-import { useState } from "react";
-import { useCrud } from "../../hooks/useCrud";
-import { contactsService } from "../../services/contactsService";
-import AdminTable from "../../components/admin/AdminTable";
-import AdminModal from "../../components/admin/AdminModal";
-import FormField from "../../components/admin/FormField";
-import ConfirmDialog from "../../components/admin/ConfirmDialog";
-import ErrorBanner from "../../components/admin/ErrorBanner";
-import SkillOrb from "../../components/ui/SkillOrb";
+"use client";
 
-const EMPTY = {
+import { useState } from "react";
+import { useCrud } from "@/hooks/useCrud";
+import { contactsService } from "@/services/contactsService";
+import AdminTable from "@/components/admin/AdminTable";
+import AdminModal from "@/components/admin/AdminModal";
+import FormField from "@/components/admin/FormField";
+import ConfirmDialog from "@/components/admin/ConfirmDialog";
+import ErrorBanner from "@/components/admin/ErrorBanner";
+import SkillOrb from "@/components/ui/SkillOrb";
+
+interface Contact {
+  id: string;
+  icon: string;
+  label: string;
+  href: string;
+  sort_order: number;
+  data_type: string;
+}
+
+const EMPTY: Omit<Contact, "id"> = {
   icon: "🔗",
   label: "",
   href: "",
@@ -20,43 +31,37 @@ const COLUMNS = [
   {
     key: "icon",
     label: "Icon",
-    render: (value) => (
-      <SkillOrb
-        skill={{
-          icon: value,
-        }}
-        index={value}
-        isPlainIcon
-      />
+    render: (value: unknown) => (
+      <SkillOrb skill={{ icon: value as string }} isPlainIcon />
     ),
   },
   { key: "label", label: "Label" },
   {
     key: "href",
     label: "URL",
-    render: (v) => (
+    render: (v: unknown) => (
       <a
-        href={v}
+        href={v as string}
         target="_blank"
         rel="noreferrer"
         className="admin-truncate"
         style={{ color: "#7c6fe6" }}
       >
-        {v}
+        {v as string}
       </a>
     ),
   },
   { key: "sort_order", label: "Order" },
 ];
 
-export default function AdminContacts() {
+export default function AdminContactsPage() {
   const { items, loading, error, addItem, updateItem, removeItem } =
-    useCrud(contactsService);
+    useCrud<Contact>(contactsService);
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [editing, setEditing] = useState(null);
-  const [form, setForm] = useState(EMPTY);
-  const [confirmTarget, setConfirmTarget] = useState(null);
+  const [editing, setEditing] = useState<Contact | null>(null);
+  const [form, setForm] = useState<Omit<Contact, "id">>(EMPTY);
+  const [confirmTarget, setConfirmTarget] = useState<Contact | null>(null);
   const [saving, setSaving] = useState(false);
 
   const openAdd = () => {
@@ -65,7 +70,7 @@ export default function AdminContacts() {
     setModalOpen(true);
   };
 
-  const openEdit = (row) => {
+  const openEdit = (row: Contact) => {
     setEditing(row);
     setForm({ ...row });
     setModalOpen(true);
@@ -93,7 +98,8 @@ export default function AdminContacts() {
     setConfirmTarget(null);
   };
 
-  const set = (key) => (val) => setForm((f) => ({ ...f, [key]: val }));
+  const set = (key: keyof typeof form) => (val: string) =>
+    setForm((f) => ({ ...f, [key]: val }));
 
   return (
     <div className="admin-page">
@@ -143,7 +149,7 @@ export default function AdminContacts() {
         <FormField
           label="Sort Order"
           value={form.sort_order}
-          onChange={(v) => set("sort_order")(Number(v))}
+          onChange={(v) => setForm((f) => ({ ...f, sort_order: Number(v) }))}
           type="number"
         />
         <FormField

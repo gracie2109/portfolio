@@ -1,12 +1,20 @@
-import { useEffect, useRef } from "react";
+"use client";
+
+import { useEffect, useRef, type ReactNode, type MouseEvent, type FormEvent } from "react";
+
+interface AdminModalProps {
+  open: boolean;
+  title: string;
+  onClose: () => void;
+  onSubmit: () => void;
+  children: ReactNode;
+}
 
 /**
  * Generic modal dialog for admin forms.
- *
- * @param {{ open, title, onClose, onSubmit, children }} props
  */
-export default function AdminModal({ open, title, onClose, onSubmit, children }) {
-  const dialogRef = useRef(null);
+export default function AdminModal({ open, title, onClose, onSubmit, children }: AdminModalProps) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -15,12 +23,11 @@ export default function AdminModal({ open, title, onClose, onSubmit, children })
     if (!open && dialog.open) dialog.close();
   }, [open]);
 
-  // Close on backdrop click
-  const handleBackdropClick = (e) => {
+  const handleBackdropClick = (e: MouseEvent<HTMLDialogElement>) => {
     if (e.target === dialogRef.current) onClose();
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onSubmit();
   };

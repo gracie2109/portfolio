@@ -1,7 +1,22 @@
+interface FormFieldOption {
+  label: string;
+  value: string;
+}
+
+interface FormFieldProps {
+  label: string;
+  value: string | number;
+  onChange: (value: string) => void;
+  type?: string;
+  textarea?: boolean;
+  placeholder?: string;
+  required?: boolean;
+  options?: FormFieldOption[];
+  name?: string;
+}
+
 /**
- * Labelled input / textarea / select for admin forms.
- *
- * @param {{ label, value, onChange, type?, textarea?, placeholder?, required?, options? }} props
+ * Labelled input / textarea / select / radio-group for admin forms.
  */
 export default function FormField({
   label,
@@ -12,7 +27,8 @@ export default function FormField({
   placeholder = "",
   required = false,
   options = [],
-}) {
+  name,
+}: FormFieldProps) {
   const id = `field-${label.replace(/\s+/g, "-").toLowerCase()}`;
 
   const renderControl = () => {
