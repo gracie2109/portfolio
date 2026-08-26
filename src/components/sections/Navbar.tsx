@@ -23,10 +23,14 @@ const TIME_FORMAT: Intl.DateTimeFormatOptions = {
 };
 
 const NavClock = memo(() => {
-  const [time, setTime] = useState(() => new Date());
+  // Starts null so server and client render the same markup on the
+  // first pass — `new Date()` would differ by the seconds elapsed
+  // between server render and client hydration, causing a mismatch.
+  const [time, setTime] = useState<Date | null>(null);
 
   useEffect(() => {
     const tick = () => setTime(new Date());
+    tick();
     const delay = 1000 - (Date.now() % 1000);
 
     let intervalId: ReturnType<typeof setInterval>;
@@ -43,7 +47,7 @@ const NavClock = memo(() => {
 
   return (
     <div className="nav-time">
-      {time.toLocaleTimeString("en-US", TIME_FORMAT)}
+      {time ? time.toLocaleTimeString("en-US", TIME_FORMAT) : null}
     </div>
   );
 });
