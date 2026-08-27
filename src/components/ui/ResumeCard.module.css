@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────
-   ResumeCard — Skeleton Preview Card Component
+   ResumeCard — Resume Preview Card Component
 ───────────────────────────────────────────────────── */
 
 .card {
@@ -47,60 +47,22 @@
   color: #2563eb;
 }
 
-/* ── Skeleton Lines ── */
-.skeleton {
+/* ── Document Preview ── */
+.docPreview {
   display: flex;
   flex-direction: column;
-  gap: 0.875rem;
-}
-
-.skeletonHeader {
-  height: 14px;
-  width: 55%;
-  border-radius: 4px;
-  background: linear-gradient(90deg, #d1d5db 25%, #e5e7eb 50%, #d1d5db 75%);
-  background-size: 200% 100%;
-  animation: shimmer 2s ease-in-out infinite;
-}
-
-.skeletonLines {
-  display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 0.5rem;
+  padding: 2.25rem 0;
+  color: #9382ff;
 }
 
-.skeletonLine {
-  height: 10px;
-  border-radius: 3px;
-  background: linear-gradient(90deg, #e2e5ea 25%, #eef0f3 50%, #e2e5ea 75%);
-  background-size: 200% 100%;
-  animation: shimmer 2s ease-in-out infinite;
-}
-
-.lineFull { width: 100%; }
-.line90 { width: 90%; }
-.line80 { width: 80%; }
-.line70 { width: 70%; }
-.line60 { width: 60%; }
-.line50 { width: 50%; }
-
-.skeletonCols {
-  display: flex;
-  gap: 0.75rem;
-}
-
-.skeletonCol {
-  flex: 1;
-  height: 32px;
-  border-radius: 6px;
-  background: linear-gradient(90deg, #e2e5ea 25%, #eef0f3 50%, #e2e5ea 75%);
-  background-size: 200% 100%;
-  animation: shimmer 2s ease-in-out infinite;
-}
-
-@keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+.docPreviewText {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #adb5bd;
 }
 
 /* ── Info Section ── */

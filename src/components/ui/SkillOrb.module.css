@@ -162,12 +162,10 @@
   color: rgba(255, 255, 255, 0.65);
   text-align: center;
   line-height: 1.45;
-  max-height: 3.2em;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  -webkit-box-orient: vertical;
+  max-height: 4.4em;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 0.15rem;
   transform: translateY(14px);
   opacity: 0;
   transition:    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1) 0.12s,    opacity 0.3s ease 0.12s;
@@ -175,6 +173,15 @@
   -moz-transform: translateY(14px);
   -ms-transform: translateY(14px);
   -o-transform: translateY(14px);
+}
+
+.overlayDesc::-webkit-scrollbar {
+  width: 3px;
+}
+
+.overlayDesc::-webkit-scrollbar-thumb {
+  background: rgba(147, 130, 255, 0.5);
+  border-radius: 99px;
 }
 
 .card:hover .overlayDesc {

@@ -1037,18 +1037,20 @@ html {
 
 .tl-company-time {
   font-size: 0.75rem;
-  text-align: right;
-  font-family: var(--font-display);
-  color: var(--accent);
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  margin-top: 0.25rem;
 }
 
 .tl-item--left .tl-card      { order: 1; }
 .tl-item--left .tl-dot-wrap  { order: 2; }
 .tl-item--left .tl-opposite  { order: 3; justify-content: flex-start; padding-left: 1rem; }
+.tl-item--left .tl-company-time { text-align: left; }
 
 .tl-item--right .tl-opposite { order: 1; justify-content: flex-end; padding-right: 1rem; }
 .tl-item--right .tl-dot-wrap { order: 2; }
 .tl-item--right .tl-card     { order: 3; }
+.tl-item--right .tl-company-time { text-align: right; }
 
 .tl-card {
   position: relative;

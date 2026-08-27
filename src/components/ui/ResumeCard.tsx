@@ -54,7 +54,14 @@ interface ResumeCardProps {
 }
 
 /**
- * Resume Card Component — skeleton preview style
+ * Resume Card Component
+ * @param {Object} props
+ * @param {string} props.title - Card title (e.g., "English Version")
+ * @param {string} props.link - PDF link
+ * @param {string} [props.lang="en"] - Language code for badge
+ * @param {string} [props.viewLabel="Xem"] - View button label
+ * @param {string} [props.downloadLabel="Tải xuống"] - Download button label
+ * @param {() => void} [props.onView] - View callback (opens in-modal preview)
  */
 export default function ResumeCard({
   title,

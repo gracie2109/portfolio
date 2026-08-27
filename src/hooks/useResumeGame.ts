@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo, useRef } from "react";
 import { BOX_STATE, type BoxState } from "../components/ui/SecretCVBox";
+import { playSuspenseSfx, playWinSfx, playMissSfx } from "../utils/sfx";
 
 interface Card {
   id: number;
@@ -89,6 +90,7 @@ export function useResumeGame(missMessages: string[]) {
       });
 
       setPhase((prev) => (prev === "idle" ? "playing" : prev));
+      playSuspenseSfx();
 
       const card = cardsRef.current[idx];
 
@@ -108,8 +110,11 @@ export function useResumeGame(missMessages: string[]) {
         });
 
         if (isWin) {
+          playWinSfx();
           setPhase("finished");
           setTimeout(fireConfetti, 200);
+        } else {
+          playMissSfx();
         }
       }, 1000);
     },

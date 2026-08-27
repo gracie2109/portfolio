@@ -8,6 +8,7 @@ import ResumePreviewModal from "../ui/ResumeModal";
 import { useTranslation } from "react-i18next";
 import { useResumeData } from "../../hooks/useResumeData";
 import { useResumeGame } from "../../hooks/useResumeGame";
+import { playClickSfx } from "../../utils/sfx";
 
 /* ── COMPONENT ── */
 export default function Resume() {
@@ -78,7 +79,10 @@ export default function Resume() {
                 ohNo: t("resume.ohNo"),
                 locked: t("resume.locked"),
               }}
-              onClick={() => handlePick(idx)}
+              onClick={() => {
+                playClickSfx();
+                handlePick(idx);
+              }}
               delay={0.15 + idx * 0.1}
             />
           ))}

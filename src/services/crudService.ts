@@ -18,11 +18,12 @@ export function createCrudService(table: string, opts: CrudOpts = {}) {
         "Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to .env.local"
       );
     }
+    return supabase;
   }
 
   async function getAll() {
-    ensureClient();
-    const { data, error } = await supabase
+    const client = ensureClient();
+    const { data, error } = await client
       .from(table)
       .select("*")
       .order(orderBy, { ascending });
@@ -32,8 +33,8 @@ export function createCrudService(table: string, opts: CrudOpts = {}) {
   }
 
   async function getById(id: string) {
-    ensureClient();
-    const { data, error } = await supabase
+    const client = ensureClient();
+    const { data, error } = await client
       .from(table)
       .select("*")
       .eq("id", id)
@@ -44,8 +45,8 @@ export function createCrudService(table: string, opts: CrudOpts = {}) {
   }
 
   async function create(record: Record<string, unknown>) {
-    ensureClient();
-    const { data, error } = await supabase
+    const client = ensureClient();
+    const { data, error } = await client
       .from(table)
       .insert(record)
       .select()
@@ -56,8 +57,8 @@ export function createCrudService(table: string, opts: CrudOpts = {}) {
   }
 
   async function update(id: string, changes: Record<string, unknown>) {
-    ensureClient();
-    const { data, error } = await supabase
+    const client = ensureClient();
+    const { data, error } = await client
       .from(table)
       .update(changes)
       .eq("id", id)
@@ -69,8 +70,8 @@ export function createCrudService(table: string, opts: CrudOpts = {}) {
   }
 
   async function remove(id: string) {
-    ensureClient();
-    const { error } = await supabase.from(table).delete().eq("id", id);
+    const client = ensureClient();
+    const { error } = await client.from(table).delete().eq("id", id);
     if (error) throw error;
   }
 

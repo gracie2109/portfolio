@@ -14,8 +14,8 @@ const vi = {
     badge: "Online 24/24",
     greeting: "Xin chào, tôi là",
     name: "Phuongthao Trinh",
-    subtitle: "Tôi tạo ra {accent} kết hợp thẩm mỹ và hiệu suất",
-    subtitleAccent: "trải nghiệm số",
+    subtitle: "Tôi biến những ý tưởng mơ hồ thành {accent} — nơi thẩm mỹ và hiệu suất không phải đánh đổi, mà song hành",
+    subtitleAccent: "sản phẩm số sống động",
     btnConnect: "Kết nối ngay",
     btnWork: "Xem dự án",
     scrollHint: "Cuộn để khám phá",
@@ -28,7 +28,6 @@ const vi = {
     text1: "{{exp}} năm làm frontend/fullstack, đủ lâu để biết một sản phẩm tốt không nằm ở việc chạy được, mà ở việc người dùng không phải nghĩ ngợi gì khi dùng nó.",
     text2: "Tôi thích code rõ ràng và những chi tiết nhỏ ít ai để ý — animation đúng nhịp, load nhanh, không có gì bất ngờ khó chịu. Làm được vậy khó hơn nhìn có vẻ, và tôi thấy vui khi làm đúng.",
     text3: "Từ giao diện đến cách hệ thống vận hành phía sau, tôi cố giữ mọi thứ gọn và dễ hiểu — cho người dùng, và cho cả người sẽ đọc lại code này sau này.",
-
     stats: [
       { num: "20+", label: "Dự án hoàn thành" },
       { num: "30+", label: "Khách hàng hài lòng" },
@@ -95,9 +94,9 @@ const vi = {
   },
   resume: {
     tag: "// RESUME",
-    heading: "Chọn Secret CV {accent}",
-    headingAccent: "bí ẩn",
-    subtitle: "Có 4 Secret CV bí ẩn — chỉ 1 trong số đó chứa Resume thật. Hãy chọn và thử vận may!",
+    heading: "Mở khoá CV {accent}",
+    headingAccent: "của tôi",
+    subtitle: "4 hộp bí ẩn, 1 CV thật — 3 hộp còn lại chỉ là hư không (hoặc trò đùa). Bạn có dám thử vận may không?",
     mystery: "SECRET CV",
     openHint: "Chọn để mở",
     found: "ĐÃ TÌM THẤY!",
@@ -117,10 +116,10 @@ const vi = {
     errorMessage: "Không thể tải resume",
     noData: "Không có resume",
     missMessages: [
-      "Thử lại nhé! 💪",
-      "Đừng bỏ cuộc! Hãy tìm tiếp 🔍",
-      "Chúc bạn may mắn lần sau! 🍀",
-      "Ôi không! Thử hộp khác nhé 😅",
+      "Suýt nữa thôi! Thử hộp khác xem 💪",
+      "Không phải hộp này rồi — CV thật đang trốn ở đâu đó 🔍",
+      "Trật lất! Nhưng đừng nản, còn cơ hội đấy 🍀",
+      "Hộp rỗng! Vận may đang thử thách bạn thêm chút nữa 😅",
     ],
   },
   footer: {
