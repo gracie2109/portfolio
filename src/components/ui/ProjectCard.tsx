@@ -1,7 +1,6 @@
 "use client";
 
-import { useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent } from "react";
-import { motion, useInView } from "framer-motion";
+import { useEffect, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent } from "react";
 
 interface Project {
   emoji?: string;
@@ -12,9 +11,21 @@ interface Project {
 
 export default function ProjectCard({ project, index }: { project: Project; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: false, amount: 0.2, margin: "-30px" });
+  const [isInView, setIsInView] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsInView(entry.isIntersecting),
+      { threshold: 0.2, rootMargin: "-30px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const handleMouseMove = (e: ReactMouseEvent<HTMLDivElement>) => {
     if (!ref.current) return;
@@ -23,16 +34,10 @@ export default function ProjectCard({ project, index }: { project: Project; inde
   };
 
   return (
-    <motion.div
+    <div
       ref={ref}
-      className="project-card"
-      initial={{ opacity: 0, y: 100, rotateX: 15 }}
-      animate={isInView ? { opacity: 1, y: 0, rotateX: 0 } : { opacity: 0, y: 100, rotateX: 15 }}
-      transition={
-        isInView
-          ? { duration: 0.8, delay: index * 0.15, ease: [0.22, 1, 0.36, 1] }
-          : { duration: 0.4, delay: 0, ease: "easeIn" }
-      }
+      className={`project-card ${isInView ? "project-card--visible" : ""}`}
+      style={{ transitionDelay: isInView ? `${index * 0.15}s` : "0s" }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onMouseMove={handleMouseMove}
@@ -50,13 +55,9 @@ export default function ProjectCard({ project, index }: { project: Project; inde
             <span key={tag} className="tag">{tag}</span>
           ))}
         </div>
-        <motion.div
-          className="project-glow"
-          animate={{ opacity: hovered ? 1 : 0, scale: hovered ? 1 : 0.8 }}
-          transition={{ duration: 0.4 }}
-        />
+        <div className={`project-glow ${hovered ? "project-glow--visible" : ""}`} />
         <div className="project-spotlight" />
       </div>
-    </motion.div>
+    </div>
   );
 }

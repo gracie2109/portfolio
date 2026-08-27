@@ -1,7 +1,6 @@
 "use client";
 
-import { useRef, type ReactNode } from "react";
-import { motion, useInView } from "framer-motion";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 export default function RevealText({
   children,
@@ -14,24 +13,31 @@ export default function RevealText({
   delay?: number;
   alwaysAnimate?: boolean;
 }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, amount: 0.3, margin: "-40px" });
+  const ref = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsInView(entry.isIntersecting),
+      { threshold: 0.3, rootMargin: "-40px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   const shouldAnimate = alwaysAnimate || isInView;
 
   return (
     <div ref={ref} className="reveal-wrap">
-      <motion.div
-        className={className}
-        initial={{ y: "110%", opacity: 0 }}
-        animate={shouldAnimate ? { y: 0, opacity: 1 } : { y: "110%", opacity: 0 }}
-        transition={
-          shouldAnimate
-            ? { duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }
-            : { duration: 0.4, delay: 0, ease: "easeIn" }
-        }
+      <div
+        className={`reveal-text ${className ?? ""} ${shouldAnimate ? "reveal-text--visible" : ""}`}
+        style={{ transitionDelay: shouldAnimate ? `${delay}s` : "0s" }}
       >
         {children}
-      </motion.div>
+      </div>
     </div>
   );
 }

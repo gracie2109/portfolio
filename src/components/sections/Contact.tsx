@@ -6,7 +6,6 @@ import FadeSection from "../animation/FadeSection";
 import RevealText from "../animation/RevealText";
 import MagneticButton from "../ui/MagneticButton";
 import { useTranslation } from "react-i18next";
-import { usePublicData } from "../../hooks/usePublicData";
 import SkillOrb from "../ui/SkillOrb";
 import { useContactForm } from "../../hooks/useContactForm";
 
@@ -35,9 +34,8 @@ interface ContactLink {
   name?: string;
 }
 
-export default function Contact() {
+export default function Contact({ contactLinks }: { contactLinks: ContactLink[] }) {
   const { t } = useTranslation();
-  const { data: contactLinks, loading } = usePublicData<ContactLink>("contacts");
   const formRef = useRef<HTMLFormElement>(null);
 
   const {
@@ -81,31 +79,25 @@ export default function Contact() {
         </FadeSection>
 
         {/* Contact Links */}
-        {loading ? (
-          <p className="section-loading">
-            {t("common.loading")}
-          </p>
-        ) : (
-          <FadeSection delay={0.3}>
-            <div className="contact-links">
-              {contactLinks.map((link) => (
-                <MagneticButton
-                  key={link.id}
-                  className="contact-link"
-                  href={link.href}
-                  data_type={link?.data_type}
-                >
-                  <SkillOrb
-                    isPlainIcon
-                    skill={link}
-                    style={{ fontSize: "1.3rem" }}
-                  />
-                  <span>{link.label}</span>
-                </MagneticButton>
-              ))}
-            </div>
-          </FadeSection>
-        )}
+        <FadeSection delay={0.3}>
+          <div className="contact-links">
+            {contactLinks.map((link) => (
+              <MagneticButton
+                key={link.id}
+                className="contact-link"
+                href={link.href}
+                data_type={link?.data_type}
+              >
+                <SkillOrb
+                  isPlainIcon
+                  skill={link}
+                  style={{ fontSize: "1.3rem" }}
+                />
+                <span>{link.label}</span>
+              </MagneticButton>
+            ))}
+          </div>
+        </FadeSection>
 
         {/* Contact Form */}
         <FadeSection delay={0.45}>

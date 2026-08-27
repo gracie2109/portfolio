@@ -1,42 +1,55 @@
 "use client";
-import { motion, useMotionValue, useTransform, animate } from "framer-motion";
-import { useEffect } from "react";
+
+import { useEffect, useState } from "react";
 
 export default function RedoAnimText({ delay, texts }: { delay: number; texts: string[] }) {
-  const textIndex = useMotionValue(0);
-
-  const baseText = useTransform(textIndex, (latest) => texts[latest] || "");
-  const count = useMotionValue(0);
-  const rounded = useTransform(count, (latest) => Math.round(latest));
-  const displayText = useTransform(rounded, (latest) =>
-    baseText.get().slice(0, latest)
-  );
-  const updatedThisRound = useMotionValue(true);
+  const [displayText, setDisplayText] = useState("");
 
   useEffect(() => {
-    animate(count, 60, {
-      type: "tween",
-      delay: delay,
-      duration: 1,
-      ease: "easeIn",
-      repeat: Infinity,
-      repeatType: "reverse",
-      repeatDelay: 1,
-      onUpdate(latest) {
-        if (updatedThisRound.get() === true && latest > 0) {
-          updatedThisRound.set(false);
-        } else if (updatedThisRound.get() === false && latest === 0) {
-          if (textIndex.get() === texts.length - 1) {
-            textIndex.set(0);
-          } else {
-            textIndex.set(textIndex.get() + 1);
-          }
-          updatedThisRound.set(true);
+    let textIndex = 0;
+    let timeoutId: ReturnType<typeof setTimeout>;
+    let intervalId: ReturnType<typeof setInterval>;
+
+    const TYPE_DURATION_MS = 1000;
+    const CHAR_COUNT = 60;
+    const CHAR_INTERVAL_MS = TYPE_DURATION_MS / CHAR_COUNT;
+    const HOLD_MS = 1000;
+
+    const typeOut = () => {
+      const full = texts[textIndex] || "";
+      let charIndex = 0;
+      intervalId = setInterval(() => {
+        charIndex++;
+        setDisplayText(full.slice(0, charIndex));
+        if (charIndex >= full.length) {
+          clearInterval(intervalId);
+          timeoutId = setTimeout(eraseOut, HOLD_MS);
         }
-      }
-    });
+      }, CHAR_INTERVAL_MS);
+    };
+
+    const eraseOut = () => {
+      const full = texts[textIndex] || "";
+      let charIndex = full.length;
+      intervalId = setInterval(() => {
+        charIndex--;
+        setDisplayText(full.slice(0, charIndex));
+        if (charIndex <= 0) {
+          clearInterval(intervalId);
+          textIndex = (textIndex + 1) % texts.length;
+          timeoutId = setTimeout(typeOut, HOLD_MS);
+        }
+      }, CHAR_INTERVAL_MS);
+    };
+
+    timeoutId = setTimeout(typeOut, delay * 1000);
+
+    return () => {
+      clearTimeout(timeoutId);
+      clearInterval(intervalId);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <motion.span className="inline">{displayText}</motion.span>;
+  return <span className="inline">{displayText}</span>;
 }

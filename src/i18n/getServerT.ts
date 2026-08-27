@@ -1,11 +1,9 @@
-import { cookies } from "next/headers";
 import i18next from "i18next";
-import en from "./en";
 import vi from "./vi";
 
 /**
- * Server-only translation accessor — resolves the language from the
- * request cookie and returns a plain `t()` function.
+ * Server-only translation accessor — Vietnamese-only, returns a plain
+ * `t()` function.
  *
  * Deliberately does NOT go through createI18nInstance()/react-i18next:
  * importing react-i18next triggers a module-scope React.createContext()
@@ -14,17 +12,15 @@ import vi from "./vi";
  * plain i18next core instead — framework-agnostic, no React dependency.
  */
 export async function getServerT() {
-  const cookieStore = await cookies();
-  const lang = cookieStore.get("portfolio-lang")?.value ?? "vi";
+  const lang = "vi";
 
   const instance = i18next.createInstance();
   instance.init({
     resources: {
-      en: { translation: en },
       vi: { translation: vi },
     },
     lng: lang,
-    fallbackLng: "en",
+    fallbackLng: "vi",
     interpolation: { escapeValue: false },
   });
 

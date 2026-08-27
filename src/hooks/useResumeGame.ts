@@ -1,5 +1,4 @@
 import { useState, useCallback, useMemo, useRef } from "react";
-import confetti from "canvas-confetti";
 import { BOX_STATE, type BoxState } from "../components/ui/SecretCVBox";
 
 interface Card {
@@ -27,8 +26,9 @@ function buildCards(missMessages: string[]): Card[] {
   );
 }
 
-/* client-only: requestAnimationFrame */
-function fireConfetti() {
+/* client-only: requestAnimationFrame; dynamic import keeps canvas-confetti out of the initial bundle */
+async function fireConfetti() {
+  const { default: confetti } = await import("canvas-confetti");
   const duration = 2500;
   const end = Date.now() + duration;
   const colors = ["#9382ff", "#ff6b6b", "#4ecdc4", "#ffe66d", "#ff8a5c"];

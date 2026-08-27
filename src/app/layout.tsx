@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { cookies } from "next/headers";
 import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import I18nProvider from "@/i18n/I18nProvider";
-import LanguageSync from "@/i18n/LanguageSync";
 import "./globals.css";
 
 // App.css already defines --font-main/--font-display/--font-mono as CSS
@@ -27,28 +25,45 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://example.com";
+const SITE_TITLE = "Gracie | Portfolio | Creative Developer";
+const SITE_DESCRIPTION =
+  "Portfolio của Gracie — Creative Developer. Khám phá dự án, kỹ năng và kinh nghiệm phát triển web sáng tạo.";
+
 export const metadata: Metadata = {
-  title: "Gracie | Portfolio | Creative Developer",
+  metadataBase: new URL(SITE_URL),
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    siteName: "Gracie Portfolio",
+    locale: "vi_VN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: ReactNode;
 }) {
-  const cookieStore = await cookies();
-  const initialLang = cookieStore.get("portfolio-lang")?.value ?? "vi";
-
   return (
     <html
-      lang={initialLang}
+      lang="vi"
       className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
     >
       <body>
-        <I18nProvider initialLang={initialLang}>
-          <LanguageSync />
-          {children}
-        </I18nProvider>
+        <I18nProvider>{children}</I18nProvider>
       </body>
     </html>
   );

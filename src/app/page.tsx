@@ -7,17 +7,31 @@ import Experience from "@/components/sections/Experience";
 import Contact from "@/components/sections/Contact";
 import Resume from "@/components/sections/Resume";
 import Footer from "@/components/sections/Footer";
+import { getPublicData } from "@/services/publicDataServer";
 
-export default function Home() {
+interface ContactLink {
+  id: string;
+  href: string;
+  label: string;
+  data_type?: string;
+  icon?: string;
+  name?: string;
+}
+
+export default async function Home() {
+  const contactLinks = await getPublicData<ContactLink>("contacts");
+
   return (
     <PageShell>
       <Navbar />
-      <Hero />
-      <About />
-      <Skills />
-      <Experience />
-      <Contact />
-      <Resume />
+      <main>
+        <Hero />
+        <About />
+        <Skills />
+        <Experience />
+        <Contact contactLinks={contactLinks} />
+        <Resume />
+      </main>
       <Footer />
     </PageShell>
   );

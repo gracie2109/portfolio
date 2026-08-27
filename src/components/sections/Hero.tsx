@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useEffect, useRef } from "react";
 import RevealText from "../animation/RevealText";
 import AnimatedName from "../animation/AnimatedName";
 import { useTranslation } from "react-i18next";
@@ -8,10 +8,39 @@ import RedoAnimText from "../animation/TypeText";
 
 export default function Hero() {
   const { t } = useTranslation();
-  const { scrollYProgress } = useScroll();
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.12], [1, 0.92]);
-  const heroY = useTransform(scrollYProgress, [0, 0.12], [0, -80]);
+  const heroRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const el = heroRef.current;
+    if (!el) return;
+
+    let ticking = false;
+
+    const update = () => {
+      ticking = false;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = maxScroll > 0 ? window.scrollY / maxScroll : 0;
+      // Mirrors the previous scrollYProgress [0, 0.12] -> [1, 0] mapping.
+      const t = Math.min(progress / 0.12, 1);
+      const opacity = 1 - t;
+      const scale = 1 - t * 0.08;
+      const y = -t * 80;
+
+      el.style.opacity = String(opacity);
+      el.style.transform = `translateY(${y}px) scale(${scale})`;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   /* Parse subtitle template: "I craft {accent} that..." */
   const renderSubtitle = () => {
@@ -26,39 +55,26 @@ export default function Hero() {
   };
 
   return (
-    <motion.section
-      className="hero"
-      style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
-    >
+    <section className="hero" ref={heroRef}>
       <div className="hero-content">
-        <motion.div
-          className="hero-badge"
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 1, duration: 0.6, type: "spring" }}
-        >
+        <div className="hero-badge hero-badge--enter">
           <span className="badge-dot" /> {t("hero.badge")}
-        </motion.div>
+        </div>
 
         <div className="hero-title-wrap">
-          <RevealText className="hero-greeting" delay={0.3} alwaysAnimate>
+          <RevealText className="hero-greeting" delay={0.1} alwaysAnimate>
             {t("hero.greeting")}
           </RevealText>
-          <RevealText className="hero-greeting" delay={0.3} alwaysAnimate>
-            <AnimatedName text={t("hero.name")} delay={0.6} />
-            <RedoAnimText texts={["aka GRACE"]} delay={0.8} />
+          <RevealText className="hero-greeting" delay={0.1} alwaysAnimate>
+            <AnimatedName text={t("hero.name")} delay={0.2} />
+            <RedoAnimText texts={["aka GRACE"]} delay={0.3} />
           </RevealText>
-          <RevealText className="hero-subtitle" delay={1.4} alwaysAnimate>
+          <RevealText className="hero-subtitle" delay={0.15} alwaysAnimate>
             {renderSubtitle()}
           </RevealText>
         </div>
 
-        <motion.div
-          className="hero-cta"
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.8, duration: 0.8 }}
-        >
+        <div className="hero-cta hero-cta--enter">
           <a href="#contact" className="btn-primary">
             <span>{t("hero.btnConnect")}</span>
             <span className="btn-arrow">→</span>
@@ -66,8 +82,8 @@ export default function Hero() {
           <a className="btn-outline" href="#projects">
             <span>{t("hero.btnWork")}</span>
           </a>
-        </motion.div>
+        </div>
       </div>
-    </motion.section>
+    </section>
   );
 }

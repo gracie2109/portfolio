@@ -84,7 +84,12 @@ export default function SkillOrb({
           />
         )
       ) : isImageUrl ? (
-        <img src={skill.icon} alt={skill.name} />
+        <img
+          src={skill.icon}
+          alt={skill.name}
+          loading="lazy"
+          decoding="async"
+        />
       ) : (
         skill.icon
       )}
@@ -123,31 +128,35 @@ export default function SkillOrb({
             {capitalizeFirstLetter(skill.description)}
           </span>
         )}
-        <a
-          href={skill?.link}
-          target="_blank"
-          style={{
-            position: "absolute",
-            bottom: 0,
-            cursor: "pointer",
-          }}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="1.2em"
-            height="1.2em"
-            viewBox="0 0 24 24"
+        {skill?.link && (
+          <a
+            href={skill.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Xem thêm về ${skill.name ?? "kỹ năng này"}`}
+            style={{
+              position: "absolute",
+              bottom: 0,
+              cursor: "pointer",
+            }}
           >
-            <path
-              fill="none"
-              stroke="#1494c1"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M10 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4M14 4h6m0 0v6m0-6L10 14"
-            />
-          </svg>
-        </a>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="1.2em"
+              height="1.2em"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="none"
+                stroke="#1494c1"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M10 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4M14 4h6m0 0v6m0-6L10 14"
+              />
+            </svg>
+          </a>
+        )}
       </div>
     </motion.div>
   );

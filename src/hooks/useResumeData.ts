@@ -1,8 +1,10 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { resumeService, type ResumeMap } from "../services/resumeService";
 
 /**
- * Fetches the { en, vi } resume rows. Client-only (browser fetch lifecycle).
+ * Fetches the { en, vi } resume rows on demand — the resume game is opt-in,
+ * so this only loads (and pulls in the Supabase client) once the player
+ * actually wins, rather than on every homepage visit.
  */
 export function useResumeData() {
   const [resumes, setResumes] = useState<ResumeMap>({ en: null, vi: null });
@@ -23,9 +25,5 @@ export function useResumeData() {
     }
   }, []);
 
-  useEffect(() => {
-    fetchResumes();
-  }, [fetchResumes]);
-
-  return { resumes, loading, error, retry: fetchResumes };
+  return { resumes, loading, error, retry: fetchResumes, fetchResumes };
 }

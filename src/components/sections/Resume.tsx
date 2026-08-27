@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useCallback } from "react";
 import FadeSection from "../animation/FadeSection";
 import RevealText from "../animation/RevealText";
 import SecretCVBox from "../ui/SecretCVBox";
@@ -14,6 +14,7 @@ export default function Resume() {
   const { t } = useTranslation();
 
   const { resumes, loading: resumeLoading, error: resumeError, retry: fetchResumes } = useResumeData();
+  const [resumesRequested, setResumesRequested] = useState(false);
 
   // Stable miss messages — only recompute when translation changes
   const missMessages = useMemo(
@@ -23,6 +24,14 @@ export default function Resume() {
 
   const { cards, boxStates, phase, hasWin, handlePick, initGame } = useResumeGame(missMessages);
   const [openModal, setOpenModal] = useState(false);
+
+  const handleOpenModal = useCallback(() => {
+    if (!resumesRequested) {
+      setResumesRequested(true);
+      fetchResumes();
+    }
+    setOpenModal(true);
+  }, [resumesRequested, fetchResumes]);
 
   /* ── Heading — memoized to avoid splitting string on every render ── */
   const heading = useMemo(() => {
@@ -82,7 +91,7 @@ export default function Resume() {
               {hasWin && (
                 <button
                   className="resume-btn resume-btn--primary"
-                  onClick={() => setOpenModal(true)}
+                  onClick={handleOpenModal}
                 >
                   {t("resume.viewBtn")}
                 </button>

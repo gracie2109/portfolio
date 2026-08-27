@@ -1,66 +1,43 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView, type Variants } from "framer-motion";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 export default function AnimatedName({ text, delay = 0.5 }: { text: string; delay?: number }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, amount: 0.3, margin: "-40px" });
+  const ref = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(false);
   const letters = text.split("");
 
-  const container: Variants = {
-    hidden: {
-      transition: { staggerChildren: 0.02, staggerDirection: -1 },
-    },
-    visible: {
-      transition: { staggerChildren: 0.04, delayChildren: delay },
-    },
-  };
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
 
-  const child: Variants = {
-    hidden: {
-      y: 80,
-      opacity: 0,
-      rotateX: -90,
-      scale: 0.5,
-      filter: "blur(10px)",
-      transition: { duration: 0.3, ease: "easeIn" },
-    },
-    visible: {
-      y: 0,
-      opacity: 1,
-      rotateX: 0,
-      scale: 1,
-      filter: "blur(0px)",
-      transition: { type: "spring", stiffness: 150, damping: 12, mass: 0.8 },
-    },
-  };
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsInView(entry.isIntersecting),
+      { threshold: 0.3, rootMargin: "-40px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <motion.div
+    <div
       ref={ref}
       className="hero-name"
-      variants={container}
-      initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
       style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", perspective: "800px" }}
     >
       {letters.map((letter, i) => (
-        <motion.span
+        <span
           key={i}
-          variants={child}
-          className="hero-letter"
-          whileHover={{
-            scale: 1.2,
-            color: "#9382ff",
-            textShadow: "0 0 40px rgba(147, 130, 255, 0.8), 0 0 80px rgba(147, 130, 255, 0.4)",
-            transition: { duration: 0.2 },
-          }}
-          style={{ display: "inline-block", whiteSpace: letter === " " ? "pre" : "normal" }}
+          className={`hero-letter ${isInView ? "hero-letter--visible" : ""}`}
+          style={{
+            display: "inline-block",
+            whiteSpace: letter === " " ? "pre" : "normal",
+            "--letter-delay": `${delay + i * 0.04}s`,
+          } as CSSProperties}
         >
-          {letter === " " ? " " : letter}
-        </motion.span>
+          {letter === " " ? " " : letter}
+        </span>
       ))}
-    </motion.div>
+    </div>
   );
 }

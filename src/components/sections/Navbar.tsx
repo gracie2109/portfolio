@@ -1,20 +1,15 @@
 "use client";
 
-import { useState, useEffect, useMemo, memo, useCallback } from "react";
-import { motion, type Transition } from "framer-motion";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import LanguageSwitcher from "../ui/LanguageSwitcher";
+import { useState, useEffect, useMemo, memo, useCallback, type CSSProperties } from "react";
+import dynamic from "next/dynamic";
 import { useTranslation } from "react-i18next";
 
+const DotLottieReact = dynamic(
+  () => import("@lottiefiles/dotlottie-react").then((mod) => mod.DotLottieReact),
+  { ssr: false },
+);
+
 const NAV_KEYS = ["about", "skills", "experience", "contact", "resume"];
-
-const NAV_LINK_TRANSITIONS = NAV_KEYS.map((_, i) => ({
-  delay: 0.7 + i * 0.1,
-}));
-
-const HOVER_STYLE = { y: -2 };
-const INITIAL_LINK = { opacity: 0, y: -20 };
-const ANIMATE_LINK = { opacity: 1, y: 0 };
 
 const TIME_FORMAT: Intl.DateTimeFormatOptions = {
   hour: "2-digit",
@@ -88,21 +83,16 @@ interface NavLinkProps {
 }
 
 const NavLink = memo(({ navKey, label, isActive, index }: NavLinkProps) => (
-  <motion.a
+  <a
     href={`#${navKey}`}
     className={`nav-link ${isActive ? "active" : ""}`}
-    initial={INITIAL_LINK}
-    animate={ANIMATE_LINK}
-    transition={NAV_LINK_TRANSITIONS[index]}
-    whileHover={HOVER_STYLE}
+    style={{ "--nav-link-delay": `${0.7 + index * 0.1}s` } as CSSProperties}
   >
     {label}
-  </motion.a>
+  </a>
 ));
 
 NavLink.displayName = "NavLink";
-
-const NAV_TRANSITION: Transition = { duration: 1, delay: 0.5, ease: [0.22, 1, 0.36, 1] };
 
 export default function Navbar() {
   const { t } = useTranslation();
@@ -111,13 +101,8 @@ export default function Navbar() {
   const navLabels = useMemo(() => NAV_KEYS.map((key) => t(`nav.${key}`)), [t]);
 
   return (
-    <motion.nav
-      className="nav"
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={NAV_TRANSITION}
-    >
-      <a href="#" className="nav-logo" >
+    <nav className="nav nav--enter">
+      <a href="#" className="nav-logo" aria-label="Trang chủ">
         <DotLottieReact src="/plant.lottie" loop autoplay />
       </a>
 
@@ -134,9 +119,8 @@ export default function Navbar() {
       </div>
 
       <div className="nav-right">
-        <LanguageSwitcher />
         <NavClock />
       </div>
-    </motion.nav>
+    </nav>
   );
 }

@@ -27,11 +27,11 @@ const en = {
     heading: "Turning ideas into {accent}",
     headingAccent: "reality",
     text1:
-      "I'm a passionate full-stack developer with 3+ years of experience creating stunning digital products. I specialize in building performant, accessible, and visually compelling web applications that leave a lasting impression.",
+      "{{exp}}+ years doing frontend and fullstack work — enough to know a good product isn't just one that runs, it's one people don't have to think twice about while using.",
     text2:
-      "My approach combines clean code architecture with pixel-perfect design implementation. Every project I touch gets the cinematic treatment — smooth animations, thoughtful interactions, and attention to every detail.",
+      "I care about clean code and the small details most people skip — animation that feels right, fast load times, nothing that catches you off guard. It's harder to get right than it looks, and I like getting it right.",
     text3:
-      "From UI and animation to state management and performance, every part is built to deliver a product that feels stable, modern, and deeply crafted.",
+      "From the interface down to how the system runs underneath, I try to keep things simple and easy to follow — for the person using it, and for whoever reads this code later.",
     stats: [
       { num: "50+", label: "Projects Completed" },
       { num: "30+", label: "Happy Clients" },

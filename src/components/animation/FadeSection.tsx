@@ -1,7 +1,6 @@
 "use client";
 
-import { useRef, type ReactNode } from "react";
-import { motion, useInView } from "framer-motion";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 export default function FadeSection({
   children,
@@ -12,18 +11,33 @@ export default function FadeSection({
   className?: string;
   delay?: number;
 }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.15, margin: "-30px" });
+  const ref = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || isInView) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15, rootMargin: "-30px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [isInView]);
 
   return (
-    <motion.div
+    <div
       ref={ref}
-      className={className}
-      initial={{ opacity: 0, y: 30 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-      transition={{ duration: 0.5, delay, ease: [0.25, 0.1, 0.25, 1] }}
+      className={`fade-section ${className ?? ""} ${isInView ? "fade-section--visible" : ""}`}
+      style={{ transitionDelay: isInView ? `${delay}s` : "0s" }}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }

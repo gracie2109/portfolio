@@ -1,23 +1,52 @@
 "use client";
 
-import { useRef, type ReactNode } from "react";
-import { motion, useScroll, useSpring } from "framer-motion";
+import { useEffect, useRef, type ReactNode } from "react";
+import dynamic from "next/dynamic";
 import CustomCursor from "../ui/CustomCursor";
-import ParticleField from "../animation/ParticleField";
 import "../../App.css";
 
+const ParticleField = dynamic(() => import("../animation/ParticleField"), {
+  ssr: false,
+});
+
 export default function PageShell({ children }: { children: ReactNode }) {
-  const containerRef = useRef(null);
-  const { scrollYProgress } = useScroll();
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
+  const progressRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let ticking = false;
+
+    const update = () => {
+      ticking = false;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = maxScroll > 0 ? window.scrollY / maxScroll : 0;
+      if (progressRef.current) {
+        progressRef.current.style.transform = `scaleX(${progress})`;
+      }
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
 
   return (
-    <div ref={containerRef} className="app">
+    <div className="app">
       <CustomCursor />
       <ParticleField />
 
       {/* Progress Bar */}
-      <motion.div className="scroll-progress" style={{ scaleX: smoothProgress }} />
+      <div ref={progressRef} className="scroll-progress" />
 
       {children}
     </div>

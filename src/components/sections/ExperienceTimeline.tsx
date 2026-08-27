@@ -1,7 +1,6 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import { localizeField } from "../../i18n/localize";
 
 interface TimelineExp {
@@ -28,17 +27,31 @@ function TimelineCard({
   lang: string;
   isFirst: boolean;
 }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.3, margin: "-40px" });
+  const ref = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(false);
   const side = index % 2 === 0 ? "left" : "right";
 
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || isInView) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3, rootMargin: "-40px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [isInView]);
+
   return (
-    <motion.div
+    <div
       ref={ref}
-      className={`tl-item tl-item--${side}`}
-      initial={{ opacity: 0, y: 40 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
+      className={`tl-item tl-item--${side} ${isInView ? "tl-item--visible" : ""}`}
     >
       {/* Dot on the line */}
       <div className="tl-dot-wrap">
@@ -66,7 +79,7 @@ function TimelineCard({
           {localizeField(exp, "description", lang)}
         </p>
       </div>
-    </motion.div>
+    </div>
   );
 }
 

@@ -1,10 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
 import styles from "./ResumeCard.module.css";
 import { downloadFile } from "../../../utils/file";
-import { useMemo } from "react";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+
+const DotLottieReact = dynamic(
+  () => import("@lottiefiles/dotlottie-react").then((mod) => mod.DotLottieReact),
+  { ssr: false },
+);
 
 // Icons
 const ViewIcon = () => (
@@ -77,9 +81,6 @@ export default function ResumeCard({
   };
   const badge = lang === "vi" ? "VI" : "EN";
 
-  const lottiePreview = useMemo(() => {
-    return <DotLottieReact src="/previewResume.lottie" loop autoplay />;
-  }, []);
   return (
     <motion.div
       className={styles.card}
@@ -93,7 +94,7 @@ export default function ResumeCard({
         >
           {badge}
         </span>
-        {lottiePreview}
+        <DotLottieReact src="/previewResume.lottie" loop autoplay />
       </div>
 
       {/* Info */}

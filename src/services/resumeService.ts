@@ -1,5 +1,3 @@
-import { supabase } from "../lib/supabaseClient";
-
 export interface ResumeRow {
   name: string;
   link: string;
@@ -13,8 +11,11 @@ export interface ResumeMap {
 
 /**
  * Fetches the resume rows and maps them into { en, vi } by row name.
+ * Dynamically imports the Supabase client so it's only pulled into the
+ * bundle when a resume is actually requested (the resume game is opt-in).
  */
 const getResumes = async (): Promise<ResumeMap> => {
+  const { supabase } = await import("../lib/supabaseClient");
   const { data, error } = await supabase.from("resume").select("*");
   if (error) throw error;
 
