@@ -1,0 +1,163 @@
+"use client";
+
+import { useMemo, type CSSProperties } from "react";
+import { motion, type Variants } from "framer-motion";
+import DOMPurify from "dompurify";
+import { useMounted } from "@/hooks/useMounted";
+import styles from "./SkillOrb.module.css";
+import { capitalizeFirstLetter } from "../../../utils/string";
+
+const cardVariants: Variants = {
+  hidden: { opacity: 0, y: 20, scale: 0.95 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.35,
+      delay: Math.min(i * 0.04, 0.4),
+      ease: [0.25, 0.1, 0.25, 1],
+    },
+  }),
+  exit: {
+    opacity: 0,
+    scale: 0.95,
+    transition: { duration: 0.2, ease: "easeIn" },
+  },
+};
+
+interface Skill {
+  icon?: string;
+  name?: string;
+  description?: string;
+  link?: string;
+  type?: string;
+}
+
+interface SkillOrbProps {
+  skill: Skill;
+  index?: number;
+  isPlainIcon?: boolean;
+  style?: CSSProperties;
+  typeLabel?: string;
+}
+
+export default function SkillOrb({
+  skill,
+  index,
+  isPlainIcon = false,
+  style,
+  typeLabel,
+}: SkillOrbProps) {
+  // DOMPurify needs a DOM to construct its sanitizer — unavailable
+  // during SSR. Defer the sanitized-SVG branch until mounted
+  // client-side to avoid a server crash / hydration mismatch.
+  const mounted = useMounted();
+
+  // Detect icon type
+  const isSvgString = useMemo(() => {
+    return (
+      typeof skill.icon === "string" && skill.icon.trim().startsWith("<svg")
+    );
+  }, [skill.icon]);
+
+  const isImageUrl = useMemo(() => {
+    return (
+      typeof skill.icon === "string" &&
+      (skill.icon.startsWith("http") ||
+        skill.icon.startsWith("/") ||
+        skill.icon.endsWith(".png") ||
+        skill.icon.endsWith(".jpg") ||
+        skill.icon.endsWith(".webp"))
+    );
+  }, [skill.icon]);
+
+  const renderIcon = (className?: string) => (
+    <span className={className} style={{ ...(style ?? {}) }}>
+      {isSvgString ? (
+        mounted && (
+          <span
+            className="skill-svg"
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(skill.icon as string),
+            }}
+          />
+        )
+      ) : isImageUrl ? (
+        <img
+          src={skill.icon}
+          alt={skill.name}
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        skill.icon
+      )}
+    </span>
+  );
+
+  /* Plain icon mode — no card wrapper */
+  if (isPlainIcon) {
+    return renderIcon("skill-icon-small");
+  }
+
+  return (
+    <motion.div
+      className={styles.card}
+      custom={index}
+      variants={cardVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      whileHover={{
+        scale: 1.04,
+        boxShadow:
+          "0 8px 32px rgba(147, 130, 255, 0.18), 0 0 0 1px rgba(147, 130, 255, 0.12)",
+        transition: { duration: 0.3 },
+      }}
+    >
+      {/* Default content (fades on hover) */}
+      {renderIcon(styles.icon)}
+      <span className={styles.name}>{skill.name}</span>
+      {typeLabel && <span className={styles.typeLabel}>{typeLabel}</span>}
+
+      {/* Hover overlay — slide-up detail */}
+      <div className={styles.overlay}>
+        {skill.description && (
+          <span className={styles.overlayDesc}>
+            {capitalizeFirstLetter(skill.description)}
+          </span>
+        )}
+        {skill?.link && (
+          <a
+            href={skill.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Xem thêm về ${skill.name ?? "kỹ năng này"}`}
+            style={{
+              position: "absolute",
+              bottom: 0,
+              cursor: "pointer",
+            }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="1.2em"
+              height="1.2em"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="none"
+                stroke="#1494c1"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M10 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4M14 4h6m0 0v6m0-6L10 14"
+              />
+            </svg>
+          </a>
+        )}
+      </div>
+    </motion.div>
+  );
+}
