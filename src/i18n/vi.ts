@@ -96,7 +96,7 @@ const vi = {
     tag: "// RESUME",
     heading: "Mở khoá CV {accent}",
     headingAccent: "của tôi",
-    subtitle: "4 hộp bí ẩn, 1 CV thật — 3 hộp còn lại chỉ là hư không (hoặc trò đùa). Bạn có dám thử vận may không?",
+    subtitle: "4 hộp bí ẩn, 1 hộp chứa CV của tôi. Nhấn thử để khám phá nhé!",
     mystery: "SECRET CV",
     openHint: "Chọn để mở",
     found: "ĐÃ TÌM THẤY!",

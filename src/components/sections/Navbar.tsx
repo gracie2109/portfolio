@@ -80,13 +80,15 @@ interface NavLinkProps {
   label: string;
   isActive: boolean;
   index: number;
+  onClick?: () => void;
 }
 
-const NavLink = memo(({ navKey, label, isActive, index }: NavLinkProps) => (
+const NavLink = memo(({ navKey, label, isActive, index, onClick }: NavLinkProps) => (
   <a
     href={`#${navKey}`}
     className={`nav-link ${isActive ? "active" : ""}`}
     style={{ "--nav-link-delay": `${0.7 + index * 0.1}s` } as CSSProperties}
+    onClick={onClick}
   >
     {label}
   </a>
@@ -97,8 +99,20 @@ NavLink.displayName = "NavLink";
 export default function Navbar() {
   const { t } = useTranslation();
   const activeSection = useActiveSection();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navLabels = useMemo(() => NAV_KEYS.map((key) => t(`nav.${key}`)), [t]);
+
+  const closeMenu = useCallback(() => setIsMenuOpen(false), []);
+  const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), []);
+
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMenuOpen]);
 
   return (
     <nav className="nav nav--enter">
@@ -106,7 +120,7 @@ export default function Navbar() {
         <DotLottieReact src="/plant.lottie" loop autoplay />
       </a>
 
-      <div className="nav-links">
+      <div className={`nav-links ${isMenuOpen ? "nav-links--open" : ""}`}>
         {NAV_KEYS.map((key, i) => (
           <NavLink
             key={key}
@@ -114,13 +128,27 @@ export default function Navbar() {
             label={navLabels[i]}
             isActive={activeSection === key}
             index={i}
+            onClick={closeMenu}
           />
         ))}
       </div>
 
       <div className="nav-right">
         <NavClock />
+        <button
+          type="button"
+          className={`nav-toggle ${isMenuOpen ? "nav-toggle--open" : ""}`}
+          aria-label={isMenuOpen ? "Đóng menu" : "Mở menu"}
+          aria-expanded={isMenuOpen}
+          onClick={toggleMenu}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
       </div>
+
+      {isMenuOpen && <div className="nav-overlay" onClick={closeMenu} />}
     </nav>
   );
 }

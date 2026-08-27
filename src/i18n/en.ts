@@ -100,7 +100,7 @@ const en = {
     tag: "// RESUME",
     heading: "Unlock {accent}",
     headingAccent: "my CV",
-    subtitle: "4 mystery boxes, 1 real CV — the other 3 are just decoys (or a good laugh). Feeling lucky?",
+    subtitle: "4 mystery boxes, 1 holds my CV. Tap one to find out!",
     mystery: "SECRET CV",
     openHint: "Tap to unlock",
     found: "JACKPOT!",

@@ -198,6 +198,55 @@ html {
   gap: 1rem;
 }
 
+/* ─── Nav Toggle (mobile/tablet hamburger) ─── */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  z-index: 101;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--text-dim);
+  border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.3s ease, background 0.3s ease;
+}
+
+.nav-toggle--open span {
+  background: var(--accent);
+}
+
+.nav-toggle--open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.nav-toggle--open span:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-toggle--open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.nav-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 99;
+}
+
 /* ─── Language Switcher ─── */
 .lang-switcher {
   display: flex;
@@ -703,6 +752,10 @@ html {
 }
 
 /* ─── About ─── */
+.about-section {
+  padding-top: 3rem;
+}
+
 .about-text {
   font-size: 1.15rem;
   line-height: 1.8;
@@ -1650,15 +1703,52 @@ html {
 }
 
 /* ─── Responsive ─── */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .nav {
     padding: 1rem 1.5rem;
   }
 
-  .nav-links {
-    display: none;
+  .nav-toggle {
+    display: flex;
   }
 
+  .nav-links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    background: rgba(10, 10, 15, 0.95);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+    transition: max-height 0.35s ease;
+  }
+
+  .nav-links--open {
+    max-height: 400px;
+    padding: 0.5rem 0 1.5rem;
+  }
+
+  .nav-links .nav-link {
+    width: 100%;
+    text-align: center;
+    padding: 0.9rem 1.5rem;
+    animation: none;
+  }
+
+  .nav-links .nav-link::after {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
   .nav-time {
     display: none;
   }
