@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 import I18nProvider from "@/i18n/I18nProvider";
 import "./globals.css";
 
@@ -64,6 +66,8 @@ export default function RootLayout({
     >
       <body suppressHydrationWarning>
         <I18nProvider>{children}</I18nProvider>
+        <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );

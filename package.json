@@ -13,6 +13,8 @@
     "@lottiefiles/dotlottie-react": "^0.18.1",
     "@supabase/ssr": "^0.12.5",
     "@supabase/supabase-js": "^2.97.0",
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
     "canvas-confetti": "^1.9.4",
     "dompurify": "^3.3.1",
     "framer-motion": "^12.34.3",
