@@ -11,6 +11,32 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
+async function notifyTelegram(name: string, email: string, message: string) {
+  const botToken = Deno.env.get("TELEGRAM_BOT_TOKEN");
+  const chatId = Deno.env.get("TELEGRAM_CHAT_ID");
+  if (!botToken || !chatId) return;
+
+  const text =
+    `📩 *New contact message*\n\n` +
+    `*Name:* ${name}\n` +
+    `*Email:* ${email}\n` +
+    `*Message:*\n${message}`;
+
+  try {
+    await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text,
+        parse_mode: "Markdown",
+      }),
+    });
+  } catch (err) {
+    console.error("Telegram notify failed:", (err as Error).message);
+  }
+}
+
 Deno.serve(async (req) => {
   // Handle preflight
   if (req.method === "OPTIONS") {
@@ -49,6 +75,8 @@ Deno.serve(async (req) => {
         }
       );
     }
+
+    await notifyTelegram(name, email, message);
 
     return new Response(
       JSON.stringify({ success: true }),
