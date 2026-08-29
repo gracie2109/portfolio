@@ -45,9 +45,13 @@ Deno.serve(async (req) => {
     for (const [key, value] of formData.entries()) {
       if (key === "attachments" && value instanceof File) {
         const buffer = await value.arrayBuffer();
-        const base64 = btoa(
-          String.fromCharCode(...new Uint8Array(buffer))
-        );
+        const bytes = new Uint8Array(buffer);
+        let binary = "";
+        const chunkSize = 8192;
+        for (let i = 0; i < bytes.length; i += chunkSize) {
+          binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
+        }
+        const base64 = btoa(binary);
         attachments.push({
           filename: value.name,
           content: base64,
@@ -57,7 +61,7 @@ Deno.serve(async (req) => {
 
     // Send email via Resend
     const resendPayload: Record<string, unknown> = {
-      from: "Grace <noreply@yourdomain.com>",
+      from: "Grace <onboarding@resend.dev>",
       to: email,
       subject,
       html: message,
@@ -97,6 +101,19 @@ Deno.serve(async (req) => {
 
     if (dbError) {
       console.error("DB update error:", dbError.message);
+    }
+
+    const { error: replyLogError } = await supabase
+      .from("contact_replies")
+      .insert({
+        contact_id: contactId,
+        subject,
+        message,
+        attachment_names: attachments.map((a) => a.filename),
+      });
+
+    if (replyLogError) {
+      console.error("Reply log insert error:", replyLogError.message);
     }
 
     return jsonResponse({ success: true, id: resendData.id });

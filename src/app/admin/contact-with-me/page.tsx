@@ -12,6 +12,16 @@ interface ContactWithMe {
   message: string;
   replied_at: string | null;
   created_at: string;
+  reply_count: number;
+}
+
+interface ContactReply {
+  id: string;
+  contact_id: string;
+  subject: string;
+  message: string;
+  attachment_names: string[];
+  sent_at: string;
 }
 
 const COLUMNS = [
@@ -45,6 +55,11 @@ const COLUMNS = [
     key: "created_at",
     label: "Created At",
     render: (v: unknown) => new Date(v as string).toLocaleString(),
+  },
+  {
+    key: "reply_count",
+    label: "Replies",
+    render: (v: unknown) => <span>{(v as number) ?? 0}</span>,
   },
 ];
 
@@ -227,6 +242,139 @@ function ReplyModal({ contact, onClose, onSent }: ReplyModalProps) {
   );
 }
 
+/* ── History Modal ────────────────────────────────────────── */
+interface HistoryModalProps {
+  contact: ContactWithMe | null;
+  onClose: () => void;
+}
+
+function HistoryModal({ contact, onClose }: HistoryModalProps) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const [replies, setReplies] = useState<ContactReply[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    const d = dialogRef.current;
+    if (!d) return;
+    if (contact && !d.open) d.showModal();
+    if (!contact && d.open) d.close();
+  }, [contact]);
+
+  useEffect(() => {
+    if (!contact) return;
+    setLoading(true);
+    setError("");
+    contactWithMeService
+      .getReplies(contact.id)
+      .then((data) => {
+        setReplies(data);
+        // Expand the most recent reply, collapse the rest.
+        setCollapsed(
+          Object.fromEntries(data.map((r, i) => [r.id, i !== 0]))
+        );
+      })
+      .catch((err) => setError(err instanceof Error ? err.message : "Failed to load history"))
+      .finally(() => setLoading(false));
+  }, [contact]);
+
+  const toggleCollapsed = (id: string) => {
+    setCollapsed((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  if (!contact) return null;
+
+  return (
+    <dialog
+      ref={dialogRef}
+      className="admin-modal admin-modal-large"
+      onClick={(e) => e.target === dialogRef.current && onClose()}
+    >
+      <div className="admin-modal-inner" style={{ width: "95vw", height: "100%", display: "flex", flexDirection: "column" }}>
+        <div className="admin-modal-header">
+          <h3>Reply History — {contact.name}</h3>
+          <button type="button" className="admin-modal-close" onClick={onClose}>
+            ✕
+          </button>
+        </div>
+
+        <div className="admin-modal-body" style={{ flex: 1, overflowY: "auto" }}>
+          {error && <ErrorBanner message={error} onDismiss={() => setError("")} />}
+
+          {loading ? (
+            <p style={{ fontSize: "0.9rem", color: "#a0a0b8" }}>Loading…</p>
+          ) : replies.length === 0 ? (
+            <p style={{ fontSize: "0.9rem", color: "#a0a0b8" }}>No replies sent yet.</p>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+              {replies.map((r, i) => {
+                const isCollapsed = collapsed[r.id];
+                const num = replies.length - i;
+                return (
+                  <div
+                    key={r.id}
+                    style={{
+                      background: "#1a1a2e",
+                      borderRadius: 10,
+                      fontSize: "0.9rem",
+                      color: "#c8c6d8",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => toggleCollapsed(r.id)}
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        gap: "1rem",
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        padding: "0.85rem 1rem",
+                        color: "#a0a0b8",
+                        textAlign: "left",
+                      }}
+                    >
+                      <span style={{ display: "flex", alignItems: "center", gap: "0.6rem", minWidth: 0 }}>
+                        <span style={{ color: "#888", flexShrink: 0 }}>{isCollapsed ? "▶" : "▼"}</span>
+                        <span style={{ color: "#6c6ce0", flexShrink: 0 }}>#{num}</span>
+                        <strong style={{ color: "#e8e6f0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                          {r.subject}
+                        </strong>
+                      </span>
+                      <span style={{ flexShrink: 0 }}>{new Date(r.sent_at).toLocaleString()}</span>
+                    </button>
+                    {!isCollapsed && (
+                      <div style={{ padding: "0 1rem 1rem" }}>
+                        <div dangerouslySetInnerHTML={{ __html: r.message }} />
+                        {r.attachment_names.length > 0 && (
+                          <div style={{ marginTop: "0.5rem", color: "#888" }}>
+                            📎 {r.attachment_names.join(", ")}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        <div className="admin-modal-footer">
+          <button type="button" className="admin-btn admin-btn-secondary" onClick={onClose}>
+            Close
+          </button>
+        </div>
+      </div>
+    </dialog>
+  );
+}
+
 /* ── Page ─────────────────────────────────────────────────── */
 export default function AdminContactWithMePage() {
   const [items, setItems] = useState<ContactWithMe[]>([]);
@@ -234,6 +382,7 @@ export default function AdminContactWithMePage() {
   const [error, setError] = useState("");
   const [dataSearch, setDataSearch] = useState("");
   const [replyTarget, setReplyTarget] = useState<ContactWithMe | null>(null);
+  const [historyTarget, setHistoryTarget] = useState<ContactWithMe | null>(null);
 
   const loadData = async (searchText = "") => {
     try {
@@ -288,19 +437,34 @@ export default function AdminContactWithMePage() {
         showEdit={false}
         showDelete={false}
         actionButtons={(row) => (
-          <button
-            className="admin-btn admin-btn-edit"
-            onClick={() => setReplyTarget(row)}
-          >
-            {row.replied_at ? "Reply Again" : "Reply"}
-          </button>
+          <div style={{ display: "flex", gap: "0.5rem" }}>
+            <button
+              className="admin-btn admin-btn-edit"
+              onClick={() => setReplyTarget(row)}
+            >
+              {row.replied_at ? "Reply Again" : "Reply"}
+            </button>
+            <button
+              className="admin-btn admin-btn-secondary"
+              onClick={() => setHistoryTarget(row)}
+              disabled={!row.reply_count}
+            >
+              View History
+            </button>
+          </div>
         )}
       />
 
       <ReplyModal
+        key={replyTarget?.id ?? "none"}
         contact={replyTarget}
         onClose={() => setReplyTarget(null)}
         onSent={handleReplySent}
+      />
+
+      <HistoryModal
+        contact={historyTarget}
+        onClose={() => setHistoryTarget(null)}
       />
     </div>
   );

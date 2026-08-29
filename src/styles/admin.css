@@ -461,6 +461,17 @@
   backdrop-filter: blur(4px);
 }
 
+.admin-modal-large {
+  max-width: 960px;
+  height: 85vh;
+}
+
+.admin-modal-large .admin-modal-body {
+  max-height: none;
+  overflow-x: hidden;
+  overflow-wrap: anywhere;
+}
+
 .admin-confirm {
   max-width: 400px;
 }
