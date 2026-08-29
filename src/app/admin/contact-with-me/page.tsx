@@ -21,6 +21,7 @@ interface ContactReply {
   subject: string;
   message: string;
   attachment_names: string[];
+  attachment_paths: string[];
   sent_at: string;
 }
 
@@ -283,6 +284,15 @@ function HistoryModal({ contact, onClose }: HistoryModalProps) {
     setCollapsed((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
+  const handleViewAttachment = async (path: string) => {
+    try {
+      const url = await contactWithMeService.getAttachmentUrl(path);
+      window.open(url, "_blank", "noopener,noreferrer");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to open attachment");
+    }
+  };
+
   if (!contact) return null;
 
   return (
@@ -291,7 +301,7 @@ function HistoryModal({ contact, onClose }: HistoryModalProps) {
       className="admin-modal admin-modal-large"
       onClick={(e) => e.target === dialogRef.current && onClose()}
     >
-      <div className="admin-modal-inner" style={{ width: "95vw", height: "100%", display: "flex", flexDirection: "column" }}>
+      <div className="admin-modal-inner" style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
         <div className="admin-modal-header">
           <h3>Reply History — {contact.name}</h3>
           <button type="button" className="admin-modal-close" onClick={onClose}>
@@ -349,11 +359,38 @@ function HistoryModal({ contact, onClose }: HistoryModalProps) {
                       <span style={{ flexShrink: 0 }}>{new Date(r.sent_at).toLocaleString()}</span>
                     </button>
                     {!isCollapsed && (
-                      <div style={{ padding: "0 1rem 1rem" }}>
-                        <div dangerouslySetInnerHTML={{ __html: r.message }} />
+                      <div style={{ padding: "0 1rem 1rem", maxWidth: "100%", overflowX: "hidden" }}>
+                        <div
+                          style={{ maxWidth: "100%", overflowWrap: "anywhere" }}
+                          dangerouslySetInnerHTML={{ __html: r.message }}
+                        />
                         {r.attachment_names.length > 0 && (
-                          <div style={{ marginTop: "0.5rem", color: "#888" }}>
-                            📎 {r.attachment_names.join(", ")}
+                          <div style={{ marginTop: "0.5rem", display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+                            {r.attachment_names.map((name, idx) => {
+                              const path = r.attachment_paths?.[idx];
+                              return path ? (
+                                <button
+                                  key={idx}
+                                  type="button"
+                                  onClick={() => handleViewAttachment(path)}
+                                  style={{
+                                    background: "rgba(108, 108, 224, 0.12)",
+                                    border: "1px solid rgba(108, 108, 224, 0.3)",
+                                    borderRadius: 6,
+                                    color: "#a5a3f5",
+                                    cursor: "pointer",
+                                    fontSize: "0.85rem",
+                                    padding: "0.25rem 0.6rem",
+                                  }}
+                                >
+                                  📎 {name}
+                                </button>
+                              ) : (
+                                <span key={idx} style={{ color: "#888", fontSize: "0.85rem" }}>
+                                  📎 {name}
+                                </span>
+                              );
+                            })}
                           </div>
                         )}
                       </div>

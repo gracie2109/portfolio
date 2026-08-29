@@ -76,6 +76,7 @@ interface ContactReply {
   subject: string;
   message: string;
   attachment_names: string[];
+  attachment_paths: string[];
   sent_at: string;
 }
 
@@ -97,8 +98,28 @@ const getReplies = async (contactId: string): Promise<ContactReply[]> => {
   return data;
 };
 
+/**
+ * Get a temporary signed URL to view/download a stored attachment.
+ */
+const getAttachmentUrl = async (path: string): Promise<string> => {
+  if (!supabase) {
+    throw new Error(
+      "Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to .env.local"
+    );
+  }
+
+  const { data, error } = await supabase.storage
+    .from("contact-attachments")
+    .createSignedUrl(path, 60 * 60);
+
+  if (error) throw error;
+
+  return data.signedUrl;
+};
+
 export const contactWithMeService = {
   getAll,
   replyEmailService,
   getReplies,
+  getAttachmentUrl,
 };

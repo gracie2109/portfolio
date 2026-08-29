@@ -464,6 +464,7 @@
 .admin-modal-large {
   max-width: 960px;
   height: 85vh;
+  overflow: hidden;
 }
 
 .admin-modal-large .admin-modal-body {

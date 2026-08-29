@@ -41,7 +41,7 @@ Deno.serve(async (req) => {
     }
 
     // Collect file attachments
-    const attachments: { filename: string; content: string }[] = [];
+    const attachments: { filename: string; content: string; bytes: Uint8Array; type: string }[] = [];
     for (const [key, value] of formData.entries()) {
       if (key === "attachments" && value instanceof File) {
         const buffer = await value.arrayBuffer();
@@ -55,6 +55,8 @@ Deno.serve(async (req) => {
         attachments.push({
           filename: value.name,
           content: base64,
+          bytes,
+          type: value.type || "application/octet-stream",
         });
       }
     }
@@ -67,7 +69,10 @@ Deno.serve(async (req) => {
       html: message,
     };
     if (attachments.length > 0) {
-      resendPayload.attachments = attachments;
+      resendPayload.attachments = attachments.map((a) => ({
+        filename: a.filename,
+        content: a.content,
+      }));
     }
 
     const res = await fetch("https://api.resend.com/emails", {
@@ -103,6 +108,21 @@ Deno.serve(async (req) => {
       console.error("DB update error:", dbError.message);
     }
 
+    // Persist attachments to storage so they can be viewed later from the history modal
+    const attachmentPaths: string[] = [];
+    for (const a of attachments) {
+      const path = `${contactId}/${crypto.randomUUID()}-${a.filename}`;
+      const { error: uploadError } = await supabase.storage
+        .from("contact-attachments")
+        .upload(path, a.bytes, { contentType: a.type, upsert: false });
+
+      if (uploadError) {
+        console.error("Attachment upload error:", uploadError.message);
+        continue;
+      }
+      attachmentPaths.push(path);
+    }
+
     const { error: replyLogError } = await supabase
       .from("contact_replies")
       .insert({
@@ -110,6 +130,7 @@ Deno.serve(async (req) => {
         subject,
         message,
         attachment_names: attachments.map((a) => a.filename),
+        attachment_paths: attachmentPaths,
       });
 
     if (replyLogError) {
