@@ -265,19 +265,25 @@ function HistoryModal({ contact, onClose }: HistoryModalProps) {
 
   useEffect(() => {
     if (!contact) return;
-    setLoading(true);
-    setError("");
-    contactWithMeService
-      .getReplies(contact.id)
-      .then((data) => {
+
+    const loadReplies = async () => {
+      setLoading(true);
+      setError("");
+      try {
+        const data = await contactWithMeService.getReplies(contact.id);
         setReplies(data);
         // Expand the most recent reply, collapse the rest.
         setCollapsed(
           Object.fromEntries(data.map((r, i) => [r.id, i !== 0]))
         );
-      })
-      .catch((err) => setError(err instanceof Error ? err.message : "Failed to load history"))
-      .finally(() => setLoading(false));
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to load history");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadReplies();
   }, [contact]);
 
   const toggleCollapsed = (id: string) => {
