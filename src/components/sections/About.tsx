@@ -22,7 +22,9 @@ export default async function About() {
     return <>{parts[0]}<span className="accent">{t("about.headingAccent")}</span>{parts[1]}</>;
   };
 
-  const stats = t("about.stats", { returnObjects: true }) as unknown as Stat[];
+  const stats = (t("about.stats", { returnObjects: true }) as unknown as Stat[]).map(
+    (stat, index) => (index === 2 ? { ...stat, num: `${experienceYears}+` } : stat)
+  );
 
   return (
     <section id="about" className="section about-section">
