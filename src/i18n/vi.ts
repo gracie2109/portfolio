@@ -117,10 +117,10 @@ const vi = {
     errorMessage: "Không thể tải resume",
     noData: "Không có resume",
     missMessages: [
-      "Suýt nữa thôi! Thử hộp khác xem 💪",
-      "Không phải hộp này rồi — CV thật đang trốn ở đâu đó 🔍",
-      "Trật lất! Nhưng đừng nản, còn cơ hội đấy 🍀",
-      "Hộp rỗng! Vận may đang thử thách bạn thêm chút nữa 😅",
+      "Chưa đúng hộp này, thử hộp khác nhé!",
+      "Không phải hộp này — CV vẫn còn ở đâu đó.",
+      "Chưa trúng, thử hộp còn lại xem sao.",
+      "Hộp này trống, chọn lại một hộp khác xem sao.",
     ],
   },
   footer: {

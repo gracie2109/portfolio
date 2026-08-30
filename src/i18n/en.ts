@@ -121,10 +121,10 @@ const en = {
     errorMessage: "Failed to load resumes",
     noData: "No resume available",
     missMessages: [
-      "So close! Try another box 💪",
-      "Not this one — the real CV is hiding somewhere 🔍",
-      "Missed it! But don't give up yet 🍀",
-      "Empty box! Luck's testing you a bit more 😅",
+      "Not this box, try another one.",
+      "Not it — the CV is still hiding somewhere.",
+      "Missed it, but you've still got a chance.",
+      "This box is empty, pick another one.",
     ],
   },
   footer: {
