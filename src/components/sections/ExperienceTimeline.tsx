@@ -66,12 +66,7 @@ function TimelineCard({
 
       {/* Card */}
       <div className="tl-card">
-        <span className="tl-period">
-          {exp.period}
-          {exp.duration && (
-            <span className="tl-duration"> · {exp.duration}</span>
-          )}
-        </span>
+        <span className="tl-period">{exp.period}</span>
         <h3 className="tl-role">
           {localizeField(exp, "role", lang)}
         </h3>
