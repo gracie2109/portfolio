@@ -2,6 +2,7 @@
 
 import { useMemo, type CSSProperties } from "react";
 import { motion, type Variants } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import DOMPurify from "dompurify";
 import { useMounted } from "@/hooks/useMounted";
 import styles from "./SkillOrb.module.css";
@@ -53,6 +54,7 @@ export default function SkillOrb({
   // during SSR. Defer the sanitized-SVG branch until mounted
   // client-side to avoid a server crash / hydration mismatch.
   const mounted = useMounted();
+  const { t } = useTranslation();
 
   // Detect icon type
   const isSvgString = useMemo(() => {
@@ -123,11 +125,11 @@ export default function SkillOrb({
 
       {/* Hover overlay — slide-up detail */}
       <div className={styles.overlay}>
-        {skill.description && (
-          <span className={styles.overlayDesc}>
-            {capitalizeFirstLetter(skill.description)}
-          </span>
-        )}
+        <span className={styles.overlayDesc}>
+          {skill.description
+            ? capitalizeFirstLetter(skill.description)
+            : t("skills.noDescription")}
+        </span>
         {skill?.link && (
           <a
             href={skill.link}

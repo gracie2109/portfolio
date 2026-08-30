@@ -56,6 +56,7 @@ const en = {
       database: "Database",
       cloud_tool: "Cloud & Tools",
     },
+    noDescription: "Coming soon",
   },
   projects: {
     tag: "// PROJECTS",

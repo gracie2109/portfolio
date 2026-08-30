@@ -52,6 +52,7 @@ const vi = {
       database: "Database",
       cloud_tool: "Cloud & Công cụ",
     },
+    noDescription: "Đang cập nhật",
   },
   projects: {
     tag: "// DỰ ÁN",
