@@ -61,6 +61,11 @@ async function fireConfetti() {
 export function useResumeGame(missMessages: string[]) {
   // Use ref for cards so handlePick never needs cards in its dep array
   const cardsRef = useRef<Card[]>(buildCards(missMessages));
+  // True while a pick is mid-flight (OPENING, awaiting its 1s reveal timeout).
+  // A plain ref — not state — because it must gate re-entrant clicks
+  // synchronously; state updates aren't guaranteed to apply before the
+  // next click event is handled.
+  const isOpeningRef = useRef(false);
 
   // eslint-disable-next-line react-hooks/refs
   const [boxStates, setBoxStates] = useState<BoxState[]>(() =>
@@ -78,17 +83,16 @@ export function useResumeGame(missMessages: string[]) {
      Merges "disable sealed boxes" logic here → removes the useEffect.        */
   const handlePick = useCallback(
     (idx: number) => {
-      setBoxStates((prev) => {
-        // Guard: only act on SEALED boxes; block if already finished
-        if (prev[idx] !== BOX_STATE.SEALED) return prev;
-        // Check phase via prev array (any WIN means we're finished)
-        const isFinished = prev.some((s) => s === BOX_STATE.WIN);
-        if (isFinished) return prev;
+      // Only one pick may be in flight at a time — a rapid second click
+      // (on this box or another) while the first is still resolving is a no-op.
+      if (isOpeningRef.current) return;
 
-        // Start OPENING animation
+      setBoxStates((prev) => {
+        if (prev[idx] !== BOX_STATE.SEALED) return prev;
         return prev.map((s, i) => (i === idx ? BOX_STATE.OPENING : s));
       });
 
+      isOpeningRef.current = true;
       setPhase((prev) => (prev === "idle" ? "playing" : prev));
       playSuspenseSfx();
 
@@ -97,24 +101,23 @@ export function useResumeGame(missMessages: string[]) {
       setTimeout(() => {
         const isWin = card.type === "resume";
 
-        setBoxStates((prev) => {
-          // Guard: if already won from another path, bail
-          if (prev.some((s) => s === BOX_STATE.WIN) && !isWin) return prev;
-
-          return prev.map((s, i) => {
+        setBoxStates((prev) =>
+          prev.map((s, i) => {
             if (i === idx) return isWin ? BOX_STATE.WIN : BOX_STATE.MISS;
             // On win → disable remaining sealed boxes (merged from useEffect)
             if (isWin && s === BOX_STATE.SEALED) return BOX_STATE.DISABLED;
             return s;
-          });
-        });
+          }),
+        );
 
         if (isWin) {
           playWinSfx();
           setPhase("finished");
           setTimeout(fireConfetti, 200);
+          // Stays locked — the game is over until initGame() resets it.
         } else {
           playMissSfx();
+          isOpeningRef.current = false;
         }
       }, 1000);
     },
@@ -124,6 +127,7 @@ export function useResumeGame(missMessages: string[]) {
   /* ── Reset game ── */
   const initGame = useCallback(() => {
     cardsRef.current = buildCards(missMessages);
+    isOpeningRef.current = false;
     setBoxStates(cardsRef.current.map(() => BOX_STATE.SEALED));
     setPhase("idle");
   }, [missMessages]);
