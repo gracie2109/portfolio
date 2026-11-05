@@ -70,7 +70,7 @@ export default function Contact({ contactLinks }: { contactLinks: ContactLink[] 
           <span className="section-tag">{t("contact.tag")}</span>
         </FadeSection>
 
-        <RevealText className="section-heading contact-heading" delay={0.1}>
+        <RevealText as="h2" className="section-heading contact-heading" delay={0.1}>
           {renderHeading()}
         </RevealText>
 
