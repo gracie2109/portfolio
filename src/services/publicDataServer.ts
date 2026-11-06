@@ -12,6 +12,15 @@ export async function getPublicData<T = unknown>(
   opts: { orderBy?: string; ascending?: boolean } = {}
 ): Promise<T[]> {
   const { orderBy = "sort_order", ascending = true } = opts;
+
+  // Vercel Preview deployments may not have the Supabase env vars; render
+  // empty sections instead of failing the whole build. Production still
+  // throws on real query errors below.
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    console.warn(`[publicData] Supabase env vars missing — "${table}" rendered empty.`);
+    return [];
+  }
+
   const supabase = createPublicClient();
   const { data, error } = await supabase
     .from(table)
