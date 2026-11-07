@@ -27,10 +27,16 @@ export default function ProjectCard({ project, index }: { project: Project; inde
     return () => observer.disconnect();
   }, []);
 
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+
   const handleMouseMove = (e: ReactMouseEvent<HTMLDivElement>) => {
     if (!ref.current) return;
     const rect = ref.current.getBoundingClientRect();
-    setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    setMousePos({ x, y });
+    // Up to ±8° of 3D tilt toward the cursor.
+    setTilt({ x: (0.5 - y / rect.height) * 16, y: (x / rect.width - 0.5) * 16 });
   };
 
   return (
@@ -39,12 +45,20 @@ export default function ProjectCard({ project, index }: { project: Project; inde
       className={`project-card ${isInView ? "project-card--visible" : ""}`}
       style={{ transitionDelay: isInView ? `${index * 0.15}s` : "0s" }}
       onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onMouseLeave={() => {
+        setHovered(false);
+        setTilt({ x: 0, y: 0 });
+      }}
       onMouseMove={handleMouseMove}
     >
       <div
         className="project-card-inner"
-        style={{ "--mouse-x": `${mousePos.x}px`, "--mouse-y": `${mousePos.y}px` } as CSSProperties}
+        style={{
+          "--mouse-x": `${mousePos.x}px`,
+          "--mouse-y": `${mousePos.y}px`,
+          "--tilt-x": `${tilt.x}deg`,
+          "--tilt-y": `${tilt.y}deg`,
+        } as CSSProperties}
       >
         <div className="project-number">0{index + 1}</div>
         <div className="project-emoji">{project.emoji}</div>

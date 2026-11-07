@@ -10,7 +10,7 @@ const DotLottieReact = dynamic(
   { ssr: false },
 );
 
-const NAV_KEYS = ["about", "skills", "experience", "contact", "resume"];
+const NAV_KEYS = ["about", "skills", "experience", "projects", "contact", "resume"];
 
 const TIME_FORMAT: Intl.DateTimeFormatOptions = {
   hour: "2-digit",
@@ -97,12 +97,16 @@ const NavLink = memo(({ navKey, label, isActive, index, onClick }: NavLinkProps)
 
 NavLink.displayName = "NavLink";
 
-export default function Navbar() {
+export default function Navbar({ showProjects = false }: { showProjects?: boolean }) {
   const { t } = useTranslation();
+  const navKeys = useMemo(
+    () => NAV_KEYS.filter((key) => key !== "projects" || showProjects),
+    [showProjects],
+  );
   const activeSection = useActiveSection();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const navLabels = useMemo(() => NAV_KEYS.map((key) => t(`nav.${key}`)), [t]);
+  const navLabels = useMemo(() => navKeys.map((key) => t(`nav.${key}`)), [navKeys, t]);
 
   const closeMenu = useCallback(() => setIsMenuOpen(false), []);
   const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), []);
@@ -122,7 +126,7 @@ export default function Navbar() {
       </a>
 
       <div className={`nav-links ${isMenuOpen ? "nav-links--open" : ""}`}>
-        {NAV_KEYS.map((key, i) => (
+        {navKeys.map((key, i) => (
           <NavLink
             key={key}
             navKey={key}

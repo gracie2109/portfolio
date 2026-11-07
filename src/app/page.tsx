@@ -4,6 +4,7 @@ import Hero, { type HeroLink } from "@/components/sections/Hero";
 import About from "@/components/sections/About";
 import Skills from "@/components/sections/Skills";
 import Experience from "@/components/sections/Experience";
+import Projects from "@/components/sections/Projects";
 import Contact from "@/components/sections/Contact";
 import Resume from "@/components/sections/Resume";
 import Footer from "@/components/sections/Footer";
@@ -30,10 +31,12 @@ const HERO_LINK_KEYS = ["linkedin", "github", "email"];
 const contactKey = (link: ContactLink) => (link.label ?? link.name ?? "").toLowerCase();
 
 export default async function Home() {
-  const [contactLinks, experiences] = await Promise.all([
+  const [contactLinks, experiences, projects] = await Promise.all([
     getPublicData<ContactLink>("contacts"),
     getPublicData<ExperienceRow>("experiences", { orderBy: "start_time", ascending: false }),
+    getPublicData<{ id: string }>("projects"),
   ]);
+  const hasProjects = projects.length > 0;
   const experienceYears = getExperienceYears(experiences);
 
   const heroLinks: HeroLink[] = HERO_LINK_KEYS.flatMap((key) => {
@@ -50,12 +53,13 @@ export default async function Home() {
         email={contactLinks.find((link) => link.href.startsWith("mailto:"))?.href.replace("mailto:", "")}
         currentCompany={currentJob?.company}
       />
-      <Navbar />
+      <Navbar showProjects={hasProjects} />
       <main>
         <Hero experienceYears={experienceYears} links={heroLinks} />
         <About />
         <Skills />
         <Experience />
+        <Projects />
         <Contact contactLinks={contactLinks} />
         <Resume />
       </main>

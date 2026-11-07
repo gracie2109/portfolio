@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { localizeField } from "../../i18n/localize";
 
 interface TimelineExp {
@@ -29,7 +30,10 @@ function TimelineCard({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [isInView, setIsInView] = useState(false);
+  const { t } = useTranslation();
   const side = index % 2 === 0 ? "left" : "right";
+  const isCurrent = Boolean(exp.start_time) && !exp.end_time;
+  const description = localizeField(exp, "description", lang);
 
   useEffect(() => {
     const el = ref.current;
@@ -65,14 +69,16 @@ function TimelineCard({
       </div>
 
       {/* Card */}
-      <div className="tl-card">
-        <span className="tl-period">{exp.period}</span>
+      <div className={`tl-card${isCurrent ? " tl-card--current" : ""}`}>
+        <div className="tl-card-top">
+          <span className="tl-period">{exp.period}</span>
+          {isCurrent && <span className="tl-badge">{t("experience.current")}</span>}
+        </div>
         <h3 className="tl-role">
           {localizeField(exp, "role", lang)}
         </h3>
-        <p className="tl-desc">
-          {localizeField(exp, "description", lang)}
-        </p>
+        <p className="tl-company">{exp.company}</p>
+        {description && <p className="tl-desc">{description}</p>}
       </div>
     </div>
   );

@@ -20,6 +20,9 @@ export default async function Projects() {
   const { t, lang } = await getServerT();
   const rawProjects = await getPublicData<RawProject>("projects");
 
+  // Only show the section once there is something to show.
+  if (rawProjects.length === 0) return null;
+
   const renderHeading = () => {
     const parts = t("projects.heading").split("{accent}");
     return <>{parts[0]}<span className="accent">{t("projects.headingAccent")}</span>{parts[1]}</>;
