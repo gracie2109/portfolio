@@ -13,17 +13,17 @@ import "./globals.css";
 // font-family, so the existing per-element var(--font-*) usage picks up
 // the self-hosted font automatically.
 const inter = Inter({
-  subsets: ["latin", "vietnamese"],
+  subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800", "900"],
   variable: "--font-main",
 });
 const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin", "vietnamese"],
+  subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-display",
 });
 const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin", "vietnamese"],
+  subsets: ["latin"],
   weight: ["400", "500"],
   variable: "--font-mono",
 });
