@@ -3,6 +3,7 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import dynamic from "next/dynamic";
 import CustomCursor from "../ui/CustomCursor";
+import ParallaxController, { ParallaxBackdrop } from "../animation/Parallax";
 import "../../App.css";
 
 const ParticleField = dynamic(() => import("../animation/ParticleField"), {
@@ -44,6 +45,8 @@ export default function PageShell({ children }: { children: ReactNode }) {
     <div className="app">
       <CustomCursor />
       <ParticleField />
+      <ParallaxBackdrop />
+      <ParallaxController />
 
       {/* Progress Bar */}
       <div ref={progressRef} className="scroll-progress" />

@@ -3,9 +3,8 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 export default function AnimatedName({ text, delay = 0.5 }: { text: string; delay?: number }) {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLSpanElement>(null);
   const [isInView, setIsInView] = useState(false);
-  const letters = text.split("");
 
   useEffect(() => {
     const el = ref.current;
@@ -19,25 +18,31 @@ export default function AnimatedName({ text, delay = 0.5 }: { text: string; dela
     return () => observer.disconnect();
   }, []);
 
+  // Group letters per word so a line can only wrap between words.
+  let letterIndex = 0;
+  const words = text.split(" ").map((word) =>
+    word.split("").map((letter) => ({ letter, index: letterIndex++ }))
+  );
+
   return (
-    <div
-      ref={ref}
-      className="hero-name"
-      style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", perspective: "800px" }}
-    >
-      {letters.map((letter, i) => (
-        <span
-          key={i}
-          className={`hero-letter ${isInView ? "hero-letter--visible" : ""}`}
-          style={{
-            display: "inline-block",
-            whiteSpace: letter === " " ? "pre" : "normal",
-            "--letter-delay": `${delay + i * 0.04}s`,
-          } as CSSProperties}
-        >
-          {letter === " " ? " " : letter}
+    <span ref={ref} className="hero-name">
+      {words.map((word, wordIndex) => (
+        <span key={wordIndex} className="hero-word">
+          {word.map(({ letter, index }) => (
+            <span
+              key={index}
+              className={`hero-letter ${isInView ? "hero-letter--visible" : ""}`}
+              style={{
+                display: "inline-block",
+                "--letter-delay": `${delay + index * 0.04}s`,
+              } as CSSProperties}
+            >
+              {letter}
+            </span>
+          ))}
+          {wordIndex < words.length - 1 && <span className="hero-space"> </span>}
         </span>
       ))}
-    </div>
+    </span>
   );
 }

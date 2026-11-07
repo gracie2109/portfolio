@@ -40,7 +40,7 @@ export default async function Skills() {
         <FadeSection>
           <span className="section-tag">{t("skills.tag")}</span>
         </FadeSection>
-        <RevealText className="section-heading" delay={0.1}>
+        <RevealText as="h2" className="section-heading" delay={0.1}>
           {renderHeading()}
         </RevealText>
 

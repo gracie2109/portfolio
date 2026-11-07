@@ -48,7 +48,7 @@ export default async function Experience() {
           <span className="section-tag">{t("experience.tag")}</span>
         </FadeSection>
 
-        <RevealText className="section-heading" delay={0.1}>
+        <RevealText as="h2" className="section-heading" delay={0.1}>
           {heading}
         </RevealText>
 

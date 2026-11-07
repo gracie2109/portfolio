@@ -7,11 +7,14 @@ export default function RevealText({
   className,
   delay = 0,
   alwaysAnimate = false,
+  as: Tag = "div",
 }: {
   children: ReactNode;
   className?: string;
   delay?: number;
   alwaysAnimate?: boolean;
+  /** Semantic element for the animated text — e.g. "h2" for section headings. */
+  as?: "div" | "h1" | "h2" | "p";
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [isInView, setIsInView] = useState(false);
@@ -32,12 +35,12 @@ export default function RevealText({
 
   return (
     <div ref={ref} className="reveal-wrap">
-      <div
+      <Tag
         className={`reveal-text ${className ?? ""} ${shouldAnimate ? "reveal-text--visible" : ""}`}
         style={{ transitionDelay: shouldAnimate ? `${delay}s` : "0s" }}
       >
         {children}
-      </div>
+      </Tag>
     </div>
   );
 }

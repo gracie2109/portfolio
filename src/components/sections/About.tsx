@@ -32,7 +32,7 @@ export default async function About() {
         <FadeSection>
           <span className="section-tag">{t("about.tag")}</span>
         </FadeSection>
-        <RevealText className="section-heading" delay={0.1}>
+        <RevealText as="h2" className="section-heading" delay={0.1}>
           {renderHeading()}
         </RevealText>
         <FadeSection delay={0.3}>

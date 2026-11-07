@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, memo, useCallback, type CSSProperties } from "react";
 import dynamic from "next/dynamic";
 import { useTranslation } from "react-i18next";
+import { openResume } from "../../utils/resumeEvents";
 
 const DotLottieReact = dynamic(
   () => import("@lottiefiles/dotlottie-react").then((mod) => mod.DotLottieReact),
@@ -115,8 +116,8 @@ export default function Navbar() {
   }, [isMenuOpen]);
 
   return (
-    <nav className="nav nav--enter">
-      <a href="#" className="nav-logo" aria-label="Trang chủ">
+    <nav className="nav nav--enter" aria-label="Điều hướng chính">
+      <a href="#" className="nav-logo" aria-label="Về đầu trang">
         <DotLottieReact src="/plant.lottie" loop autoplay />
       </a>
 
@@ -135,6 +136,17 @@ export default function Navbar() {
 
       <div className="nav-right">
         <NavClock />
+        <a
+          href="#resume"
+          className="nav-cv"
+          onClick={(event) => {
+            event.preventDefault();
+            closeMenu();
+            openResume();
+          }}
+        >
+          {t("nav.cv")}
+        </a>
         <button
           type="button"
           className={`nav-toggle ${isMenuOpen ? "nav-toggle--open" : ""}`}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useCallback, useEffect } from "react";
 import FadeSection from "../animation/FadeSection";
 import RevealText from "../animation/RevealText";
 import SecretCVBox from "../ui/SecretCVBox";
@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { useResumeData } from "../../hooks/useResumeData";
 import { useResumeGame } from "../../hooks/useResumeGame";
 import { playClickSfx } from "../../utils/sfx";
+import { RESUME_OPEN_EVENT } from "../../utils/resumeEvents";
 
 /* ── COMPONENT ── */
 export default function Resume() {
@@ -34,6 +35,13 @@ export default function Resume() {
     setOpenModal(true);
   }, [resumesRequested, fetchResumes]);
 
+  // Hero / navbar "Download CV" buttons open the modal directly — recruiters
+  // shouldn't have to win the mystery-box game to read the CV.
+  useEffect(() => {
+    window.addEventListener(RESUME_OPEN_EVENT, handleOpenModal);
+    return () => window.removeEventListener(RESUME_OPEN_EVENT, handleOpenModal);
+  }, [handleOpenModal]);
+
   /* ── Heading — memoized to avoid splitting string on every render ── */
   const heading = useMemo(() => {
     const raw = t("resume.heading");
@@ -55,13 +63,19 @@ export default function Resume() {
           <span className="section-tag">{t("resume.tag")}</span>
         </FadeSection>
 
-        <RevealText className="section-heading resume-heading" delay={0.1}>
+        <RevealText as="h2" className="section-heading resume-heading" delay={0.1}>
           {heading}
         </RevealText>
 
         <FadeSection delay={0.2}>
           <p className="resume-subtitle">
             {t("resume.subtitle")}
+          </p>
+          <p className="resume-skip">
+            {t("resume.skipHint")}{" "}
+            <button type="button" className="resume-skip-btn" onClick={handleOpenModal}>
+              {t("resume.skipBtn")} →
+            </button>
           </p>
         </FadeSection>
 
