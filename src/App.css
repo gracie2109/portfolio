@@ -2161,3 +2161,60 @@ html {
     gap: 1.2rem;
   }
 }
+/* ─── Parallax backdrop: soft glow orbs at different depths ─── */
+.app {
+  position: relative;
+}
+
+.parallax-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.parallax-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  will-change: translate;
+}
+
+.parallax-orb--1 {
+  top: 18%;
+  left: -8%;
+  width: 420px;
+  height: 420px;
+  background: rgba(147, 130, 255, 0.16);
+}
+
+.parallax-orb--2 {
+  top: 38%;
+  right: -6%;
+  width: 360px;
+  height: 360px;
+  background: rgba(78, 205, 196, 0.12);
+}
+
+.parallax-orb--3 {
+  top: 62%;
+  left: 20%;
+  width: 300px;
+  height: 300px;
+  background: rgba(255, 107, 107, 0.08);
+}
+
+.parallax-orb--4 {
+  top: 82%;
+  right: 12%;
+  width: 380px;
+  height: 380px;
+  background: rgba(147, 130, 255, 0.13);
+}
+
+.section-tag,
+.hero-visual,
+.hero-content {
+  will-change: translate;
+}
