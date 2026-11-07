@@ -29,7 +29,6 @@ const en = {
     "CREATIVE DEVELOPER • UI/UX ENTHUSIAST • FULL STACK • PIXEL PERFECT • PERFORMANCE FIRST • ",
   about: {
     tag: "// ABOUT",
-    currently: "Currently working",
     heading: "Turning ideas into {accent}",
     headingAccent: "reality",
     text1:
@@ -71,7 +70,6 @@ const en = {
   },
   experience: {
     tag: "// EXPERIENCE",
-    current: "Current",
     heading: "My {accent}",
     headingAccent: "journey",
   },

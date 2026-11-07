@@ -66,40 +66,38 @@ export default function Contact({ contactLinks }: { contactLinks: ContactLink[] 
   return (
     <section id="contact" className="section contact-section">
       <div className="section-inner contact-inner">
-        <div className="contact-info">
-          <FadeSection>
-            <span className="section-tag">{t("contact.tag")}</span>
-          </FadeSection>
+        <FadeSection>
+          <span className="section-tag">{t("contact.tag")}</span>
+        </FadeSection>
 
-          <RevealText as="h2" className="section-heading contact-heading" delay={0.1}>
-            {renderHeading()}
-          </RevealText>
+        <RevealText as="h2" className="section-heading contact-heading" delay={0.1}>
+          {renderHeading()}
+        </RevealText>
 
-          <FadeSection delay={0.3}>
-            <p className="contact-text">{t("contact.text")}</p>
-          </FadeSection>
+        <FadeSection delay={0.3}>
+          <p className="contact-text">{t("contact.text")}</p>
+        </FadeSection>
 
-          {/* Contact Links */}
-          <FadeSection delay={0.3}>
-            <div className="contact-links">
-              {contactLinks.map((link) => (
-                <MagneticButton
-                  key={link.id}
-                  className="contact-link"
-                  href={link.href}
-                  data_type={link?.data_type}
-                >
-                  <SkillOrb
-                    isPlainIcon
-                    skill={link}
-                    style={{ fontSize: "1.3rem" }}
-                  />
-                  <span>{link.label}</span>
-                </MagneticButton>
-              ))}
-            </div>
-          </FadeSection>
-        </div>
+        {/* Contact Links */}
+        <FadeSection delay={0.3}>
+          <div className="contact-links">
+            {contactLinks.map((link) => (
+              <MagneticButton
+                key={link.id}
+                className="contact-link"
+                href={link.href}
+                data_type={link?.data_type}
+              >
+                <SkillOrb
+                  isPlainIcon
+                  skill={link}
+                  style={{ fontSize: "1.3rem" }}
+                />
+                <span>{link.label}</span>
+              </MagneticButton>
+            ))}
+          </div>
+        </FadeSection>
 
         {/* Contact Form */}
         <FadeSection delay={0.45}>

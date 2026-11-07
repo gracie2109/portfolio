@@ -28,7 +28,6 @@ const vi = {
   marquee: "LẬP TRÌNH VIÊN SÁNG TẠO • UI/UX • FULL STACK • PIXEL PERFECT • HIỆU SUẤT CAO • ",
   about: {
     tag: "// GIỚI THIỆU",
-    currently: "Hiện đang làm việc",
     heading: "Biến ý tưởng thành {accent}",
     headingAccent: "hiện thực",
     text1: "{{exp}} năm làm frontend/fullstack, đủ lâu để biết một sản phẩm tốt không nằm ở việc chạy được, mà ở việc người dùng không phải nghĩ ngợi gì khi dùng nó.",
@@ -67,7 +66,6 @@ const vi = {
   },
   experience: {
     tag: "// KINH NGHIỆM",
-    current: "Hiện tại",
     heading: "Hành trình {accent}",
     headingAccent: "của tôi",
   },

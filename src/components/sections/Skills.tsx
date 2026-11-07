@@ -1,6 +1,6 @@
 import FadeSection from "../animation/FadeSection";
 import RevealText from "../animation/RevealText";
-import SkillsBento from "./SkillsBento";
+import SkillsFilter from "./SkillsFilter";
 import { getServerT } from "../../i18n/getServerT";
 import { getPublicData } from "../../services/publicDataServer";
 
@@ -28,6 +28,9 @@ export default async function Skills() {
     );
   };
 
+  /* ── Tab labels (i18n) ── */
+  const tabLabels = t("skills.tabs", { returnObjects: true }) as unknown as Record<string, string>;
+
   /* ── Type sub-label per skill ── */
   const typeLabels = t("skills.groups", { returnObjects: true }) as unknown as Record<string, string>;
 
@@ -41,7 +44,7 @@ export default async function Skills() {
           {renderHeading()}
         </RevealText>
 
-        <SkillsBento skills={skills} typeLabels={typeLabels} />
+        <SkillsFilter skills={skills} tabLabels={tabLabels} typeLabels={typeLabels} />
       </div>
     </section>
   );
